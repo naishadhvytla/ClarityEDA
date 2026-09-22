@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Clarity — Turn any spreadsheet into a report you can act on</title>
+  <meta name="description" content="Upload a CSV or Excel file. Clarity cleans it, understands what every column means and writes a plain-English report by category, trend and segment — in seconds.">
+  <meta name="theme-color" content="#0b7380">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Clarity — Turn any spreadsheet into a report you can act on">
+  <meta property="og:description" content="Upload a CSV or Excel file and get a plain-English report by category, trend and segment — in seconds.">
+  <meta property="og:image" content="assets/img/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/app.css">
+  <script src="assets/js/theme.js"></script>
+  <script src="assets/vendor/papaparse-5.4.1.min.js" defer></script>
+  <script src="assets/vendor/supabase-2.117.0.min.js" defer></script>
+  <script type="module" src="assets/js/app.js"></script>
+</head>
+<body>
+  <noscript><div style="padding:24px;text-align:center;font-family:system-ui">Clarity needs JavaScript to analyse your data. Please enable it and reload.</div></noscript>
+
+  <!-- Shown while we check whether you're signed in -->
+  <div id="boot" class="boot" aria-live="polite">
+    <div class="boot-inner"><span class="brand-mark"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="8" width="3" height="6" rx="1" fill="#fff" opacity=".75"/><rect x="6.5" y="3" width="3" height="11" rx="1" fill="#fff"/><rect x="11" y="6" width="3" height="8" rx="1" fill="#fff" opacity=".88"/></svg></span><div class="spinner"></div></div>
+  </div>
+
+  <!-- ============================== LANDING ============================== -->
+  <div id="landing" class="lp" hidden>
+    <header class="lp-nav" id="lp-nav">
+      <div class="lp-wrap">
+        <a class="brand" href="#/"><span class="brand-mark"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="8" width="3" height="6" rx="1" fill="#fff" opacity=".75"/><rect x="6.5" y="3" width="3" height="11" rx="1" fill="#fff"/><rect x="11" y="6" width="3" height="8" rx="1" fill="#fff" opacity=".88"/></svg></span>Clarity</a>
+        <nav class="lp-links" aria-label="Sections">
+          <a href="#how" data-scroll>How it works</a>
+          <a href="#features" data-scroll>Features</a>
+          <a href="#use-cases" data-scroll>Use cases</a>
+          <a href="#faq" data-scroll>FAQ</a>
+        </nav>
+        <div class="lp-actions">
+          <button class="btn btn-ghost btn-icon btn-sm" data-action="theme" aria-label="Toggle dark mode"><svg class="icon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg></button>
+          <a class="btn btn-ghost btn-sm" href="#/login" data-auth-link>Sign in</a>
+          <a class="btn btn-primary btn-sm" href="#/signup" data-auth-cta>Get started free</a>
+        </div>
+      </div>
+    </header>
+
+    <section class="lp-hero">
+      <div class="lp-wrap hero-grid">
+        <div>
+          <span class="hero-badge"><span class="pill accent">New</span>Plain-English reports from any spreadsheet</span>
+          <h1>Turn any spreadsheet into a <span class="hl">report you can act on</span></h1>
+          <p class="lede">Upload a CSV or Excel file. Clarity cleans it, works out what every column means — revenue, category, city, date, outcome — and writes a clear report on what's driving your numbers, segment by segment.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="#/signup" data-auth-cta>Start free — it takes 30 seconds <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a class="btn btn-lg" href="#/demo/sales"><svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.5l-1.8-5L5 9.7l5.2-1.8z"/></svg>Try a live demo</a>
+          </div>
+          <div class="hero-trust">
+            <span><svg class="icon" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>No credit card</span>
+            <span><svg class="icon" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>Analysis runs in your browser</span>
+            <span><svg class="icon" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg>CSV · Excel · JSON</span>
+          </div>
+        </div>
+
+        <div class="shot-wrap" style="position:relative">
+          <div class="shot" aria-label="Example Clarity summary for a retail sales file">
+            <div class="shot-bar"><i></i><i></i><i></i><span>retail_sales_2026.csv — Summary</span></div>
+            <div class="shot-body">
+              <p class="story-line">This looks like <b>sales data</b>: <b>600 orders</b> from <b>1 Jan</b> to <b>30 Jun 2026</b>, across <b>5 categories</b> and <b>5 cities</b>. Revenue is the main measure.</p>
+              <div class="shot-chips"><span><b>revenue_inr</b> → money (₹)</span><span><b>city</b> → location</span><span><b>order_date</b> → date</span></div>
+              <div class="shot-kpis">
+                <div><div class="l">Total revenue</div><div class="v">₹37.8 L</div></div>
+                <div><div class="l">Electronics, H2 vs H1</div><div class="v down">−52%</div></div>
+                <div><div class="l">Apparel, H2 vs H1</div><div class="v up">+128%</div></div>
+              </div>
+              <div class="hbars" aria-hidden="true">
+                <div class="hb-row compact"><div class="hb-label">Electronics</div><div class="hb-track"><i class="hb-bar" style="left:0;width:100%"></i></div><div class="hb-val"><b>₹26.5 L</b></div></div>
+                <div class="hb-row compact"><div class="hb-label">Apparel</div><div class="hb-track"><i class="hb-bar" style="left:0;width:24%"></i></div><div class="hb-val"><b>₹6.36 L</b></div></div>
+                <div class="hb-row compact"><div class="hb-label">Home &amp; Kitchen</div><div class="hb-track"><i class="hb-bar" style="left:0;width:14%"></i></div><div class="hb-val"><b>₹3.71 L</b></div></div>
+                <div class="hb-row compact"><div class="hb-label">Grocery</div><div class="hb-track"><i class="hb-bar" style="left:0;width:3.4%"></i></div><div class="hb-val"><b>₹90,555</b></div></div>
+              </div>
+              <div class="shot-take"><span class="ti bad"><svg class="icon sm" viewBox="0 0 24 24"><path d="m3 7 6 6 4-4 8 8"/><path d="M15 17h6v-6"/></svg></span><span><b>Electronics is losing ground:</b> revenue fell 52% in Apr–Jun, and it alone accounts for the overall drop.</span></div>
+              <div class="shot-take"><span class="ti good"><svg class="icon sm" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span><span><b>Apparel is the fastest-growing category</b>, lifting its share of revenue from 9% to 28%.</span></div>
+            </div>
+          </div>
+          <div class="float-card a"><span class="fc-ic"><svg class="icon sm" viewBox="0 0 24 24"><path d="M5 12.5 10 17 19 7"/></svg></span><span>Data quality <b>99/100</b> · 4 issues fixed, each one reversible</span></div>
+        </div>
+      </div>
+      <div class="lp-wrap"><div class="logos"><span>Works with exports from</span><b>Excel</b><b>Google Sheets</b><b>Tally</b><b>Zoho</b><b>Shopify</b><b>any tool that saves CSV</b></div></div>
+    </section>
+
+    <section class="lp-section alt" id="how">
+      <div class="lp-wrap">
+        <div class="sec-head"><span class="eyebrow">From rows to answers</span><h2>You upload columns. Clarity hands back conclusions.</h2><p>Most tools stop at tables and charts. Clarity reads the meaning of your data and writes the analysis a good analyst would — with every number attached.</p></div>
+        <div class="compare">
+          <div class="panel">
+            <div class="panel-h"><svg class="icon sm" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 10v10"/></svg>What you upload</div>
+            <div style="overflow:auto"><table><tbody>
+              <tr><td>order_date</td><td>city</td><td>category</td><td>units</td><td>revenue_inr</td></tr>
+              <tr><td>2026-01-03</td><td>Guntur</td><td>Electronics</td><td>1</td><td>53,812</td></tr>
+              <tr><td>2026-01-03</td><td>vijayawada</td><td>Grocery</td><td>4</td><td>1,516</td></tr>
+              <tr><td>2026-01-04</td><td></td><td>Apparel</td><td>2</td><td>2,960</td></tr>
+              <tr><td>2026-01-05</td><td>Nellore </td><td>Home &amp; Kitchen</td><td>1</td><td>3,410</td></tr>
+              <tr><td>…</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="arrow"><svg class="icon lg" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="panel">
+            <div class="panel-h"><svg class="icon sm" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.5l-1.8-5L5 9.7l5.2-1.8z"/></svg>What Clarity writes</div>
+            <div class="story">
+              <p><b>Electronics brings in the most revenue: ₹26.5 L, or 70% of the total</b> — from just 14% of orders, because each order is worth more.</p>
+              <p>From Jan–Mar to Apr–Jun, revenue fell 28% overall. <b>Electronics alone accounts for the drop</b> (−₹9.4 L), while <b>Apparel grew 128%</b>.</p>
+              <p><b>Just 4 of 20 products generate 80% of revenue</b>, led by Laptop.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section" id="features">
+      <div class="lp-wrap">
+        <div class="sec-head"><span class="eyebrow">Features</span><h2>Everything between “here's my file” and “here's what we should do”</h2></div>
+        <div class="feature-grid">
+          <div class="feature"><div class="fi"><svg class="icon" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></div><h3>Understands your columns</h3><p>Money, counts, categories, locations, dates, outcomes and IDs are recognised from names and values — including ₹ amounts and DD/MM dates. Change any of them in one click.</p></div>
+          <div class="feature"><div class="fi"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><rect x="5" y="10" width="3" height="8" rx="1"/><rect x="11" y="5" width="3" height="13" rx="1"/><rect x="17" y="13" width="3" height="5" rx="1"/></svg></div><h3>Reports by category</h3><p>Every category, city, branch or plan is broken down: who leads, who lags, by how much, and whether the gap is big enough to matter.</p></div>
+          <div class="feature"><div class="fi"><svg class="icon" viewBox="0 0 24 24"><path d="m3 17 6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><h3>Trends and what's changing</h3><p>See how things move over time, which segments are growing or shrinking, and which one explains the overall change. Partial months are flagged, not miscounted.</p></div>
+          <div class="feature"><div class="fi"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg></div><h3>What drives outcomes</h3><p>Got a churned, passed or converted column? Clarity shows which groups and numbers separate the two outcomes — and turns them into recommendations.</p></div>
+          <div class="feature"><div class="fi"><svg class="icon" viewBox="0 0 24 24"><path d="M4 20 14 10"/><path d="m15 3 1 2 2 1-2 1-1 2-1-2-2-1 2-1z"/></svg></div><h3>Transparent cleaning</h3><p>Duplicates, blanks, “Guntur” vs “guntur ”, numbers stored as text — every issue is explained, previewed and logged. One click fixes the safe ones; undo anything.</p></div>
+          <div class="feature"><div class="fi"><svg class="icon" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div><h3>Share-ready reports</h3><p>Export a polished PDF, a standalone HTML page, Markdown or the cleaned CSV. Save analyses to your account and pick up where you left off.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section alt">
+      <div class="lp-wrap">
+        <div class="sec-head"><span class="eyebrow">How it works</span><h2>Three steps. No formulas.</h2></div>
+        <div class="steps">
+          <div class="step"><h3>Upload your file</h3><p>Drop in a CSV, Excel or JSON file up to 50 MB. It's read right here in your browser.</p></div>
+          <div class="step"><h3>Clarity figures it out</h3><p>Column meanings, data quality, the main measure, the categories that matter and the outcome to explain.</p></div>
+          <div class="step"><h3>Read, explore, share</h3><p>Start with the written summary, slice any measure by any category in Explore, then export the report.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section" id="use-cases">
+      <div class="lp-wrap">
+        <div class="sec-head"><span class="eyebrow">Use cases</span><h2>Built for the data you already have</h2><p>Clarity adapts its language to what it finds — orders and revenue, students and pass rates, customers and churn.</p></div>
+        <div class="domains">
+          <span>🛒 Sales &amp; orders</span><span>🎓 Student results &amp; attendance</span><span>👥 Customers &amp; churn</span><span>🧑‍💼 HR &amp; attrition</span><span>💳 Finance &amp; expenses</span><span>📣 Marketing campaigns</span><span>🏥 Healthcare records</span><span>📝 Surveys &amp; feedback</span><span>🏠 Real estate</span>
+        </div>
+        <div style="text-align:center;margin-top:30px"><a class="btn" href="#/demo/students">See a student-results demo <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+      </div>
+    </section>
+
+    <section class="lp-section alt" id="faq">
+      <div class="lp-wrap">
+        <div class="sec-head"><span class="eyebrow">FAQ</span><h2>Questions, answered</h2></div>
+        <div class="faq">
+          <details><summary>Is my data private?<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. Your file is analysed inside your browser — nothing is sent anywhere while you explore. Only when you press <b>Save</b> is the cleaned dataset stored, in a private folder that only your account can read.</p></details>
+          <details><summary>Which files can I upload?<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>CSV, TSV, Excel (.xlsx, .xls) and JSON, up to 50 MB. The first row should contain column names; Clarity skips title rows in Excel sheets automatically.</p></details>
+          <details><summary>How does Clarity “understand” my columns?<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>It reads both the column names and the values. <b>revenue_inr</b> becomes a money amount in ₹, <b>city</b> a location, <b>churned</b> (Yes/No) an outcome, <b>order_id</b> an identifier that shouldn't be added up. If it gets one wrong, change it on the Columns page and the report updates instantly.</p></details>
+          <details><summary>Is this AI? Can I trust the numbers?<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Every sentence is generated from a statistic computed on your data — totals, shares, averages, growth, effect sizes. Nothing is invented. Where a difference could be chance, the report says so.</p></details>
+          <details><summary>How many analyses can I save?<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Each free account keeps 2 saved analyses. Delete one to free a slot — you can always export the report and cleaned data first.</p></details>
+          <details><summary>Does it work on my phone?<svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></summary><p>Yes. Every page is designed for small screens, and exported reports print cleanly to PDF.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section">
+      <div class="cta-band">
+        <h2>Your next report is one upload away</h2>
+        <p>Create a free account, drop in a file, and read what your data is telling you.</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <a class="btn btn-primary btn-lg" href="#/signup" data-auth-cta>Create free account</a>
+          <a class="btn btn-lg" href="#/demo/sales" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.4)">Try the demo</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="lp-footer">
+      <div class="lp-wrap">
+        <a class="brand" href="#/"><span class="brand-mark"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="8" width="3" height="6" rx="1" fill="#fff" opacity=".75"/><rect x="6.5" y="3" width="3" height="11" rx="1" fill="#fff"/><rect x="11" y="6" width="3" height="8" rx="1" fill="#fff" opacity=".88"/></svg></span>Clarity</a>
+        <nav><a href="#faq" data-scroll>Privacy</a><a href="#/demo/sales">Demo</a><a href="#/login" data-auth-link>Sign in</a><a href="#/signup" data-auth-cta>Create account</a></nav>
+        <span>© <span id="year">2026</span> Clarity · Data analysis for everyone</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Auth + app are rendered by assets/js/app.js -->
+  <div id="auth" hidden></div>
+  <div id="app" hidden></div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <div class="modal-bg" id="modal"></div>
+  <input type="file" id="file-input" accept=".csv,.tsv,.txt,.json,.xlsx,.xls,.xlsm,.ods" hidden>
+</body>
+</html>

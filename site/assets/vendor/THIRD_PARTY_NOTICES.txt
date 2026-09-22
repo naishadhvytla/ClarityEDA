@@ -1,0 +1,8 @@
+Clarity bundles these open-source libraries, unmodified:
+
+- Papa Parse 5.4.1 — MIT License — https://github.com/mholt/PapaParse
+- @supabase/supabase-js 2.117.0 — MIT License — https://github.com/supabase/supabase-js
+- SheetJS Community Edition 0.20.3 — Apache License 2.0 — https://sheetjs.com
+  (loaded only when an Excel file is opened)
+
+Full license texts are available at the links above.

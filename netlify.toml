@@ -1,0 +1,5 @@
+# Used when the site is deployed from Git. For drag-and-drop deploys, drop the
+# `site` folder (or clarity-netlify.zip) onto https://app.netlify.com/drop.
+[build]
+  publish = "site"
+  command = ""
