@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Clarity — launch film</title>
+<script src="assets/js/gsap.min.js"></script>
+<style>
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/inter-latin-ext-400-normal.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:400;font-display:block;src:url(assets/fonts/inter-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Inter";font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/inter-latin-ext-500-normal.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:500;font-display:block;src:url(assets/fonts/inter-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Inter";font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/inter-latin-ext-600-normal.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:600;font-display:block;src:url(assets/fonts/inter-latin-600-normal.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/inter-latin-ext-700-normal.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:700;font-display:block;src:url(assets/fonts/inter-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:"Inter";font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/inter-latin-ext-800-normal.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF}
+@font-face{font-family:"Inter";font-style:normal;font-weight:800;font-display:block;src:url(assets/fonts/inter-latin-800-normal.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+:root{--bg:#f6f6f3;--surface:#fff;--ink:#121417;--ink2:#3b3e43;--muted:#676a70;--line:#e6e5df;--accent:#0b7380;--chart:#00929e;--wash:#e3f1f2;--good:#1d7a47;--bad:#b3372a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg)}
+body{font-family:"Inter",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01"}
+#root{position:relative;width:100%;height:100%;overflow:hidden;background:var(--bg)}
+.bg{position:absolute;inset:0;background:radial-gradient(1200px 700px at 12% -10%,rgba(19,144,157,.10),transparent 60%),radial-gradient(900px 600px at 100% 110%,rgba(10,95,105,.08),transparent 60%),var(--bg)}
+.glow{position:absolute;inset:0;pointer-events:none}
+.glow-a{position:absolute;width:1100px;height:1100px;left:410px;top:-10px;border-radius:50%;background:radial-gradient(circle,rgba(0,146,158,.20) 0%,rgba(0,146,158,.07) 40%,transparent 68%)}
+.glow-b{position:absolute;width:800px;height:800px;left:1300px;top:-300px;border-radius:50%;background:radial-gradient(circle,rgba(19,144,157,.14) 0%,transparent 65%)}
+.clip{position:absolute;inset:0}
+.scene{position:absolute;inset:0}
+
+/* shared type */
+.eyebrow{font-size:22px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.pill{display:inline-flex;align-items:center;height:48px;padding:0 22px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:24px;font-weight:500;color:var(--ink2);box-shadow:0 1px 2px rgba(18,20,23,.04)}
+.grad{background:linear-gradient(135deg,#13909d,#0a5f69);-webkit-background-clip:text;background-clip:text;color:transparent}
+.teal{color:var(--accent)}.bad{color:var(--bad)}.good{color:var(--good)}.neutral{color:var(--ink)}
+.muted{color:var(--muted)}
+
+/* browser frame */
+.browser{background:var(--surface);border-radius:18px;border:1px solid rgba(18,20,23,.08);box-shadow:0 50px 100px -40px rgba(18,20,23,.30),0 16px 40px -18px rgba(18,20,23,.16);overflow:hidden}
+.browser .bar{height:46px;display:flex;align-items:center;gap:9px;padding:0 18px;background:#f3f3ef;border-bottom:1px solid var(--line)}
+.browser .bar i{width:13px;height:13px;border-radius:50%;background:#d9d8d2}
+.browser .url{margin-left:18px;height:30px;display:flex;align-items:center;padding:0 16px;border-radius:8px;background:#fff;border:1px solid var(--line);font-size:16px;color:var(--muted)}
+.browser .body{position:relative;overflow:hidden}
+.browser .cam{position:absolute;left:0;top:0}
+.browser img{display:block}
+
+/* 1 hook */
+.center-stack{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.counter-row{display:flex;align-items:baseline;gap:28px;margin:26px 0 8px}
+.counter{font-size:230px;font-weight:800;letter-spacing:-.05em;line-height:1;font-variant-numeric:tabular-nums;min-width:960px;text-align:right}
+.counter-unit{font-size:84px;font-weight:600;color:var(--muted);letter-spacing:-.03em;min-width:220px;text-align:left}
+.sub{font-size:42px;font-weight:500;color:var(--ink2);letter-spacing:-.01em;margin-top:18px}
+.pill-row{display:flex;gap:14px;margin-top:34px}
+.question{margin-top:64px;font-size:62px;font-weight:750;letter-spacing:-.03em;color:var(--accent)}
+
+/* 2 sheet */
+.sheet-wrap{position:absolute;left:60px;right:60px;top:40px;height:1600px;overflow:hidden}
+.sheet{border-collapse:collapse;font-size:25px;font-variant-numeric:tabular-nums;color:var(--ink2);background:var(--surface);width:100%;box-shadow:0 30px 80px -40px rgba(18,20,23,.25)}
+.sheet th{font-family:ui-monospace,monospace;font-size:21px;font-weight:600;text-align:left;padding:16px 18px;background:#eef0ed;color:var(--ink);border:1px solid var(--line)}
+.sheet td{padding:14px 18px;border:1px solid var(--line);white-space:nowrap}
+.sheet-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(246,246,243,.15) 0%,rgba(246,246,243,.55) 45%,rgba(246,246,243,.95) 100%)}
+.overlay-card{position:absolute;left:340px;width:1240px;top:380px;padding:56px 64px;border-radius:28px;background:rgba(255,255,255,.96);border:1px solid var(--line);box-shadow:0 50px 120px -40px rgba(18,20,23,.35);text-align:center}
+.oc-l1{font-size:66px;font-weight:750;letter-spacing:-.035em}
+.oc-l2{font-size:66px;font-weight:750;letter-spacing:-.035em;color:var(--accent);margin-top:6px}
+
+/* 3 reveal */
+.reveal-top{position:absolute;left:0;right:0;top:0;height:1080px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.logo-row{display:flex;align-items:center;gap:34px}
+.mark{width:128px;height:128px;border-radius:32px;box-shadow:0 24px 50px -18px rgba(11,115,128,.65)}
+.mark svg{display:block}
+.mark.big{width:150px;height:150px;border-radius:38px}
+.wordmark{font-size:150px;font-weight:800;letter-spacing:-.05em;line-height:1}
+.wordmark.big{font-size:170px}
+.tagline{margin-top:40px;font-size:54px;font-weight:650;letter-spacing:-.03em;color:var(--ink)}
+.shot-rise{position:absolute;left:300px;top:560px}
+
+/* 4 upload */
+.s4-frame{position:absolute;left:90px;top:170px}
+.dz-hi{position:absolute;left:241px;top:149px;width:562px;height:288px;border-radius:12px;border:3px solid var(--chart);background:rgba(0,146,158,.06)}
+.file-chip{position:absolute;left:372px;top:246px;width:300px;height:88px;display:flex;align-items:center;gap:16px;padding:0 20px;background:#fff;border-radius:14px;border:1px solid var(--line);box-shadow:0 20px 40px -16px rgba(18,20,23,.35)}
+.file-chip .fc-ic,.ing-file .fi{width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:#e4f3ea;color:var(--good);flex:none}
+.file-chip b{display:block;font-size:21px}.file-chip em{font-style:normal;font-size:17px;color:var(--muted)}
+.ingest{position:absolute;left:1180px;top:250px;width:660px;padding:40px 42px;background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 50px 110px -40px rgba(18,20,23,.38)}
+.ing-file{display:flex;gap:18px;align-items:center;padding-bottom:26px;border-bottom:1px solid var(--line)}
+.ing-file b{display:block;font-size:28px;letter-spacing:-.01em}.ing-file span{font-size:21px;color:var(--muted)}
+.ing-steps{padding-top:14px}
+.st{display:flex;align-items:center;gap:18px;font-size:29px;font-weight:500;color:var(--muted);padding:13px 0}
+.st .b{position:relative;width:34px;height:34px;border-radius:50%;border:2.5px solid #d6d6d0;flex:none;display:grid;place-items:center;color:#fff}
+.st .ck{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--good);opacity:0}
+.local{margin-top:22px;display:flex;align-items:center;gap:12px;font-size:21px;color:var(--good);font-weight:600;padding:14px 18px;background:#eef7f1;border-radius:12px}
+.dot-g{width:10px;height:10px;border-radius:50%;background:var(--good)}
+
+/* 5 columns */
+.s5-frame{position:absolute;left:70px;top:150px}
+.row-hi{position:absolute;border-radius:8px;border:3px solid var(--chart);background:rgba(0,146,158,.07);opacity:0}
+.roles{position:absolute;left:1210px;top:210px;width:650px;padding:36px 38px;background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 50px 110px -40px rgba(18,20,23,.38)}
+.roles-h{font-size:24px;font-weight:700;color:var(--muted);margin-bottom:14px}
+.role{display:grid;grid-template-columns:auto auto 1fr;align-items:center;column-gap:16px;padding:18px 0;border-top:1px solid var(--line)}
+.role code{font-family:ui-monospace,monospace;font-size:26px;font-weight:600;color:var(--ink);background:#f1f1ec;padding:6px 12px;border-radius:8px}
+.role .arrow{font-size:28px;color:var(--muted)}
+.rp{justify-self:start;font-size:26px;font-weight:700;padding:8px 18px;border-radius:999px}
+.rp.grey{background:#ececE7;color:#3b3e43}.rp.teal{background:var(--wash);color:#07606b}.rp.blue{background:#e6eefb;color:#2757a8}.rp.amber{background:#fbf1dd;color:#8a5a06}
+.rn{grid-column:1/-1;font-size:21px;color:var(--muted);margin-top:10px}
+
+/* 6 summary */
+.s6-frame{position:absolute;left:180px;top:80px}
+.ring{position:absolute;border-radius:16px;border:4px solid var(--chart);box-shadow:0 0 0 10px rgba(0,146,158,.14);opacity:0}
+
+/* insight scenes */
+.insight-head{position:absolute;left:160px;top:96px;right:160px}
+.h-swap{position:relative;height:170px;margin-top:18px}
+.big-h{margin:0;font-size:64px;font-weight:750;letter-spacing:-.035em;line-height:1.12}
+.h-swap .big-h{position:absolute;left:0;top:0}
+.big-h.one{margin-top:18px}
+.h-line{display:block}
+.legend{position:absolute;left:160px;top:356px;display:flex;gap:36px;font-size:22px;color:var(--muted);font-weight:500}
+.legend i{display:inline-block;width:22px;height:14px;border-radius:4px;margin-right:10px;vertical-align:middle}
+.lg-g{background:#c9cac4}.lg-t{background:var(--chart)}
+.pairs{position:absolute;left:160px;right:160px;top:420px}
+.pair{display:grid;grid-template-columns:300px 1fr;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.pl{font-size:32px;font-weight:650;letter-spacing:-.01em}
+.bar-line{display:flex;align-items:center;gap:16px;height:40px}
+.bar{height:28px;border-radius:0 8px 8px 0}
+.bar.g{background:#c9cac4;height:22px}
+.bar.t{background:var(--chart)}
+.bv{font-size:25px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* 8 line chart */
+.chart-card{position:absolute;left:160px;top:300px;width:1120px;height:680px;padding:36px 40px 20px;background:#fff;border-radius:24px;border:1px solid var(--line);box-shadow:0 40px 100px -50px rgba(18,20,23,.35)}
+.lc .gl{stroke:#ecebe5;stroke-width:2}
+.lc .ax{font-size:20px;fill:#696c71;font-family:"Inter",sans-serif}
+.lc .ln{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.lc .ln.total{stroke:var(--chart)}.lc .ln.elec{stroke:var(--bad)}.lc .ln.app{stroke:var(--good)}
+.lc .dot{stroke:#fff;stroke-width:3}.lc .dot.total{fill:var(--chart)}.lc .dot.elec{fill:var(--bad)}.lc .dot.app{fill:var(--good)}
+.lc .qdiv{stroke:#9fa1a6;stroke-width:2;stroke-dasharray:8 8}
+.lc .qlab{font-size:20px;font-weight:600;fill:#676a70;font-family:"Inter",sans-serif}
+.lc-key{display:flex;gap:30px;font-size:22px;color:var(--ink2);font-weight:500;margin-top:8px;padding-left:90px}
+.lc-key i{display:inline-block;width:26px;height:6px;border-radius:3px;margin-right:10px;vertical-align:middle}
+.k-total{background:var(--chart)}.k-elec{background:var(--bad)}.k-app{background:var(--good)}
+.callouts{position:absolute;left:1320px;top:300px;width:460px;display:flex;flex-direction:column;gap:20px}
+.co{padding:26px 30px;background:#fff;border-radius:20px;border:1px solid var(--line);box-shadow:0 30px 70px -40px rgba(18,20,23,.35)}
+.co-l{font-size:21px;font-weight:600;color:var(--muted)}
+.co-v{font-size:64px;font-weight:800;letter-spacing:-.04em;line-height:1.1;margin-top:4px}
+.co-n{font-size:21px;color:var(--ink2);margin-top:4px;line-height:1.35}
+
+/* 9 cards */
+.cards3{position:absolute;left:160px;right:160px;top:330px;display:grid;grid-template-columns:repeat(3,1fr);gap:36px}
+.sc{height:620px;padding:40px 42px;background:#fff;border-radius:26px;border:1px solid var(--line);box-shadow:0 40px 100px -50px rgba(18,20,23,.38);display:flex;flex-direction:column}
+.sc-l{font-size:22px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.sc-v{font-size:68px;font-weight:800;letter-spacing:-.045em;margin-top:14px;line-height:1.05}
+.sc-n{font-size:25px;color:var(--ink2);margin-top:12px;line-height:1.35}
+.sc-f{font-size:21px;color:var(--muted);margin-top:18px}
+.mini-h{margin-top:auto;display:flex;flex-direction:column;gap:11px}
+.mh{display:grid;grid-template-columns:170px 1fr;align-items:center;font-size:20px;color:var(--muted)}
+.mh i{display:block;height:16px;border-radius:0 5px 5px 0;background:#d3d4ce}.mh i.on{background:var(--chart)}
+.mini-v{margin-top:auto;display:flex;align-items:flex-end;gap:16px;height:200px}
+.mv{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:20px;color:var(--muted)}
+.mv i{display:block;width:100%;border-radius:6px 6px 0 0;background:#d3d4ce}.mv i.on{background:var(--chart)}
+.mini-sq{margin-top:auto;display:grid;grid-template-columns:repeat(5,52px);gap:12px}
+.mini-sq i{display:block;width:52px;height:52px;border-radius:10px;background:#e2e3dd}.mini-sq i.on{background:var(--chart)}
+
+/* 10 act & share */
+.recs{position:absolute;left:160px;top:190px;width:1600px;padding:0;border-radius:16px;overflow:hidden}
+.recs img{display:block;width:1600px}
+.export-row{position:absolute;left:160px;top:720px;right:160px;display:flex;align-items:center;gap:22px}
+.ex-l{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-right:18px}
+.ex{display:flex;align-items:center;gap:14px;height:84px;padding:0 30px;background:#fff;border:1px solid var(--line);border-radius:18px;font-size:28px;font-weight:650;color:var(--ink);box-shadow:0 20px 50px -30px rgba(18,20,23,.35)}
+.ex svg{color:var(--accent)}
+
+/* 11 outro */
+.outro .tagline{margin-top:46px}
+.url-pill{margin-top:54px;height:70px;padding:0 34px;display:flex;align-items:center;border-radius:999px;background:linear-gradient(135deg,#13909d,#0a5f69);color:#fff;font-size:32px;font-weight:650;letter-spacing:-.01em;box-shadow:0 24px 50px -20px rgba(11,115,128,.6)}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="92.15">
+  <div class="bg"></div>
+  <div class="glow" id="glow"><div class="glow-a"></div><div class="glow-b"></div></div>
+  <section id="s1" class="clip scene-clip" data-start="0" data-duration="10.46" data-track-index="1"><div class="scene " id="s1-in">
+  <div class="center-stack">
+    <div class="eyebrow" id="s1-eb">Retail sales · Jan–Jun 2026</div>
+    <div class="counter-row"><span class="counter" id="s1-count">0</span><span class="counter-unit" id="s1-rows">rows</span></div>
+    <div class="sub" id="s1-sub">Six months of sales · 6 cities · Andhra Pradesh</div>
+    <div class="pill-row" id="s1-cities"><span class="pill">Vijayawada</span><span class="pill">Guntur</span><span class="pill">Tirupati</span><span class="pill">Rajahmundry</span><span class="pill">Nellore</span><span class="pill">Kakinada</span></div>
+    <div class="question" id="s1-q">What's really happening to the business?</div>
+  </div></div></section>
+<section id="s2" class="clip scene-clip" data-start="9.96" data-duration="3.93" data-track-index="2"><div class="scene " id="s2-in">
+  <div class="sheet-wrap"><table class="sheet" id="s2-sheet"><tr><th data-layout-allow-overlap>transaction_id</th><th data-layout-allow-overlap>date</th><th data-layout-allow-overlap>store_id</th><th data-layout-allow-overlap>store_city</th><th data-layout-allow-overlap>category</th><th data-layout-allow-overlap>product_name</th><th data-layout-allow-overlap>units_sold</th><th data-layout-allow-overlap>unit_price</th><th data-layout-allow-overlap>revenue</th><th data-layout-allow-overlap>discount_pct</th></tr><tr><td data-layout-allow-overlap>TXN000001</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Electronics</td><td data-layout-allow-overlap>Smart TV</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>3075.46</td><td data-layout-allow-overlap>5843.37</td><td data-layout-allow-overlap>5</td></tr><tr><td data-layout-allow-overlap>TXN000002</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Electronics</td><td data-layout-allow-overlap>Laptop</td><td data-layout-allow-overlap>1</td><td data-layout-allow-overlap>11598.06</td><td data-layout-allow-overlap>11598.06</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000003</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Electronics</td><td data-layout-allow-overlap>Tablet</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>5738.37</td><td data-layout-allow-overlap>15493.6</td><td data-layout-allow-overlap>10</td></tr><tr><td data-layout-allow-overlap>TXN000004</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Electronics</td><td data-layout-allow-overlap>Smart TV</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>3281.28</td><td data-layout-allow-overlap>9351.65</td><td data-layout-allow-overlap>5</td></tr><tr><td data-layout-allow-overlap>TXN000005</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>Jeans</td><td data-layout-allow-overlap>1</td><td data-layout-allow-overlap>1917.14</td><td data-layout-allow-overlap>1917.14</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000006</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>Formal Shirt</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>936.28</td><td data-layout-allow-overlap>1498.05</td><td data-layout-allow-overlap>20</td></tr><tr><td data-layout-allow-overlap>TXN000007</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>T-Shirt</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>1005.41</td><td data-layout-allow-overlap>1910.28</td><td data-layout-allow-overlap>5</td></tr><tr><td data-layout-allow-overlap>TXN000008</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>Kurta</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>2728.18</td><td data-layout-allow-overlap>8184.54</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000009</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>T-Shirt</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>1388.8</td><td data-layout-allow-overlap>2777.6</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000010</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>Jeans</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>3363.08</td><td data-layout-allow-overlap>6053.54</td><td data-layout-allow-overlap>10</td></tr><tr><td data-layout-allow-overlap>TXN000011</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>Kurta</td><td data-layout-allow-overlap>4</td><td data-layout-allow-overlap>596.79</td><td data-layout-allow-overlap>2387.16</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000012</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Apparel</td><td data-layout-allow-overlap>Saree</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>3011.98</td><td data-layout-allow-overlap>5722.76</td><td data-layout-allow-overlap>5</td></tr><tr><td data-layout-allow-overlap>TXN000013</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Rice (5kg)</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>451.35</td><td data-layout-allow-overlap>1083.24</td><td data-layout-allow-overlap>20</td></tr><tr><td data-layout-allow-overlap>TXN000014</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Rice (5kg)</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>585.21</td><td data-layout-allow-overlap>1053.38</td><td data-layout-allow-overlap>10</td></tr><tr><td data-layout-allow-overlap>TXN000015</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Rice (5kg)</td><td data-layout-allow-overlap>6</td><td data-layout-allow-overlap>353.62</td><td data-layout-allow-overlap>1909.55</td><td data-layout-allow-overlap>10</td></tr><tr><td data-layout-allow-overlap>TXN000016</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Sugar (1kg)</td><td data-layout-allow-overlap>1</td><td data-layout-allow-overlap>155.76</td><td data-layout-allow-overlap>155.76</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000017</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Rice (5kg)</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>413.69</td><td data-layout-allow-overlap>786.01</td><td data-layout-allow-overlap>5</td></tr><tr><td data-layout-allow-overlap>TXN000018</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Rice (5kg)</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>520.42</td><td data-layout-allow-overlap>1561.26</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000019</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Atta (5kg)</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>202.89</td><td data-layout-allow-overlap>365.2</td><td data-layout-allow-overlap>10</td></tr><tr><td data-layout-allow-overlap>TXN000020</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Dal (1kg)</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>253.6</td><td data-layout-allow-overlap>722.76</td><td data-layout-allow-overlap>5</td></tr><tr><td data-layout-allow-overlap>TXN000021</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Oil (1L)</td><td data-layout-allow-overlap>4</td><td data-layout-allow-overlap>436.0</td><td data-layout-allow-overlap>1744.0</td><td data-layout-allow-overlap>0</td></tr><tr><td data-layout-allow-overlap>TXN000022</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Sugar (1kg)</td><td data-layout-allow-overlap>1</td><td data-layout-allow-overlap>399.24</td><td data-layout-allow-overlap>319.39</td><td data-layout-allow-overlap>20</td></tr><tr><td data-layout-allow-overlap>TXN000023</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Dal (1kg)</td><td data-layout-allow-overlap>3</td><td data-layout-allow-overlap>139.87</td><td data-layout-allow-overlap>377.65</td><td data-layout-allow-overlap>10</td></tr><tr><td data-layout-allow-overlap>TXN000024</td><td data-layout-allow-overlap>2026-01-01</td><td data-layout-allow-overlap>S01</td><td data-layout-allow-overlap>Vijayawada</td><td data-layout-allow-overlap>Grocery</td><td data-layout-allow-overlap>Oil (1L)</td><td data-layout-allow-overlap>2</td><td data-layout-allow-overlap>594.24</td><td data-layout-allow-overlap>950.78</td><td data-layout-allow-overlap>20</td></tr></table></div>
+  <div class="sheet-fade"></div>
+  <div class="overlay-card" id="s2-card"><div class="oc-l1">Spreadsheets give you rows.</div><div class="oc-l2" id="s2-not">Not answers.</div></div></div></section>
+<section id="s3" class="clip scene-clip" data-start="13.39" data-duration="7.15" data-track-index="1"><div class="scene " id="s3-in">
+  <div class="reveal-top" id="s3-top">
+    <div class="logo-row"><div class="mark" id="s3-mark"><svg viewBox="0 0 32 32" width="128" height="128" aria-hidden="true"><defs><linearGradient id="g128" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#13909d"/><stop offset="1" stop-color="#0a5f69"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#g128)"/><rect x="7" y="16" width="4.5" height="10" rx="1.5" fill="#fff" opacity=".75"/><rect x="13.75" y="7" width="4.5" height="19" rx="1.5" fill="#fff"/><rect x="20.5" y="12" width="4.5" height="14" rx="1.5" fill="#fff" opacity=".88"/></svg></div><div class="wordmark" id="s3-word">Clarity</div></div>
+    <div class="tagline" id="s3-tag">Turn any spreadsheet into <span class="grad">a report you can act on</span></div>
+  </div>
+  <div class="shot-rise" id="s3-shot">
+  <div class="browser"  style="width:1320px">
+    <div class="bar"><i></i><i></i><i></i><span class="url">clarityeda.netlify.app</span></div>
+    <div class="body" style="height:820px"><div class="cam"><img src="assets/ui/landing.png" style="width:1320px" alt=""></div></div>
+  </div></div></div></section>
+<section id="s4" class="clip scene-clip" data-start="20.04" data-duration="8.35" data-track-index="2"><div class="scene " id="s4-in">
+  <div class="s4-frame" id="s4-frame">
+  <div class="browser"  style="width:1180px">
+    <div class="bar"><i></i><i></i><i></i><span class="url">clarityeda.netlify.app/#/app</span></div>
+    <div class="body" style="height:700px"><div class="cam"><img src="assets/ui/home.png" style="width:1180px" alt="">
+    <div class="dz-hi" id="s4-dz"></div>
+    <div class="file-chip" id="s4-chip"><span class="fc-ic"><svg viewBox="0 0 24 24" width="28" height="28"><rect x="4" y="3" width="16" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 9h16M4 15h16M10 3v18" stroke="currentColor" stroke-width="1.8"/></svg></span><span><b>retail_sales.csv</b><em>8.1 MB</em></span></div></div></div>
+  </div></div>
+  <div class="ingest" id="s4-card">
+    <div class="ing-file"><span class="fi"><svg viewBox="0 0 24 24" width="28" height="28"><rect x="4" y="3" width="16" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 9h16M4 15h16M10 3v18" stroke="currentColor" stroke-width="1.8"/></svg></span><div><b>retail_sales.csv</b><span>8.1 MB · 107,836 rows</span></div></div>
+    <div class="ing-steps"><div class="st" id="s4-st0"><span class="b" id="s4-b0"><span class="ck" id="s4-ck0"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>Reading the file</div><div class="st" id="s4-st1"><span class="b" id="s4-b1"><span class="ck" id="s4-ck1"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>Checking data quality</div><div class="st" id="s4-st2"><span class="b" id="s4-b2"><span class="ck" id="s4-ck2"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>Understanding the columns</div><div class="st" id="s4-st3"><span class="b" id="s4-b3"><span class="ck" id="s4-ck3"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>Writing your report</div></div>
+    <div class="local" id="s4-local"><span class="dot-g"></span>Runs in your browser — nothing is uploaded</div>
+  </div></div></section>
+<section id="s5" class="clip scene-clip" data-start="27.88" data-duration="10.67" data-track-index="1"><div class="scene " id="s5-in">
+  <div class="s5-frame">
+  <div class="browser"  style="width:1180px">
+    <div class="bar"><i></i><i></i><i></i><span class="url">clarityeda.netlify.app/#/app/columns</span></div>
+    <div class="body" style="height:738px"><div class="cam"><img src="assets/ui/columns.png" style="width:1180px" alt=""><div class="row-hi" id="s5-h0" style="left:228.63px;top:298.69px;width:929.25px;height:62.69px"></div><div class="row-hi" id="s5-h2" style="left:228.63px;top:474.46px;width:929.25px;height:49.17px"></div><div class="row-hi" id="s5-h3" style="left:228.63px;top:361.38px;width:929.25px;height:49.17px"></div></div></div>
+  </div></div>
+  <div class="roles" id="s5-panel">
+    <div class="roles-h">How Clarity read your columns</div>
+    
+    <div class="role" id="s5-r0"><code>transaction_id</code><span class="arrow">→</span><span class="rp grey">Identifier</span><div class="rn">never added up</div></div>
+    <div class="role" id="s5-r1"><code>revenue</code><span class="arrow">→</span><span class="rp teal">Money · ₹</span><div class="rn">totals in lakh & crore</div></div>
+    <div class="role" id="s5-r2"><code>store_city</code><span class="arrow">→</span><span class="rp blue">Location</span><div class="rn">compared city by city</div></div>
+    <div class="role" id="s5-r3"><code>date</code><span class="arrow">→</span><span class="rp amber">Date</span><div class="rn">powers every trend</div></div>
+  </div></div></section>
+<section id="s6" class="clip scene-clip" data-start="38.05" data-duration="9.16" data-track-index="2"><div class="scene " id="s6-in">
+  <div class="s6-frame">
+  <div class="browser" id="s6-browser" style="width:1560px">
+    <div class="bar"><i></i><i></i><i></i><span class="url">clarityeda.netlify.app/#/app/summary</span></div>
+    <div class="body" style="height:880px"><div class="cam"><img src="assets/ui/summary.png" style="width:1560px" alt=""><div class="ring" id="s6-r0" style="left:299px;top:372.94px;width:305.5px;height:130.81px"></div><div class="ring" id="s6-r1" style="left:609.38px;top:372.94px;width:304.69px;height:130.81px"></div><div class="ring" id="s6-r2" style="left:299px;top:520px;width:1235px;height:310.38px"></div></div></div>
+  </div></div></div></section>
+<section id="s7" class="clip scene-clip" data-start="46.71" data-duration="12.31" data-track-index="1"><div class="scene " id="s7-in">
+  <div class="insight-head">
+    <div class="eyebrow">Where the money is</div>
+    <div class="h-swap">
+      <h2 class="big-h" id="s7-h1"><span class="h-line">Electronics: <b class="neutral">3.7%</b> of transactions.</span><span class="h-line"><b class="teal">49%</b> of revenue.</span></h2>
+      <h2 class="big-h" id="s7-h2"><span class="h-line">Grocery: <b class="neutral">50%</b> of transactions.</span><span class="h-line">Just <b class="teal">9%</b> of revenue.</span></h2>
+    </div>
+  </div>
+  <div class="legend"><span><i class="lg-g"></i>Share of transactions</span><span><i class="lg-t"></i>Share of revenue</span></div>
+  <div class="pairs">
+    <div class="pair" id="s7-p0"><div class="pl">Electronics</div><div class="pb">
+      <div class="bar-line"><div class="bar g" id="s7-g0" style="width:70.3px"></div><span class="bv muted">3.7%</span></div>
+      <div class="bar-line"><div class="bar t" id="s7-t0" style="width:936.7px"></div><span class="bv">49.3%</span></div>
+    </div></div>
+    <div class="pair" id="s7-p1"><div class="pl">Home & Kitchen</div><div class="pb">
+      <div class="bar-line"><div class="bar g" id="s7-g1" style="width:148.2px"></div><span class="bv muted">7.8%</span></div>
+      <div class="bar-line"><div class="bar t" id="s7-t1" style="width:338.2px"></div><span class="bv">17.8%</span></div>
+    </div></div>
+    <div class="pair" id="s7-p2"><div class="pl">Apparel</div><div class="pb">
+      <div class="bar-line"><div class="bar g" id="s7-g2" style="width:269.8px"></div><span class="bv muted">14.2%</span></div>
+      <div class="bar-line"><div class="bar t" id="s7-t2" style="width:286.9px"></div><span class="bv">15.1%</span></div>
+    </div></div>
+    <div class="pair" id="s7-p3"><div class="pl">Grocery</div><div class="pb">
+      <div class="bar-line"><div class="bar g" id="s7-g3" style="width:953.8px"></div><span class="bv muted">50.2%</span></div>
+      <div class="bar-line"><div class="bar t" id="s7-t3" style="width:174.8px"></div><span class="bv">9.2%</span></div>
+    </div></div>
+    <div class="pair" id="s7-p4"><div class="pl">Personal Care</div><div class="pb">
+      <div class="bar-line"><div class="bar g" id="s7-g4" style="width:457.9px"></div><span class="bv muted">24.1%</span></div>
+      <div class="bar-line"><div class="bar t" id="s7-t4" style="width:163.4px"></div><span class="bv">8.6%</span></div>
+    </div></div></div></div></section>
+<section id="s8" class="clip scene-clip" data-start="58.52" data-duration="14.51" data-track-index="2"><div class="scene " id="s8-in">
+  <div class="insight-head">
+    <div class="eyebrow">What's changing</div>
+    <h2 class="big-h one">Revenue slid <b class="bad">18%</b> from January to June.</h2>
+  </div>
+  <div class="chart-card">
+    <svg width="1040" height="520" viewBox="0 0 1040 520" class="lc">
+      <line x1="90" x2="1010" y1="470" y2="470" class="gl"/><text x="74" y="478" text-anchor="end" class="ax">₹0 Cr</text><line x1="90" x2="1010" y1="320" y2="320" class="gl"/><text x="74" y="328" text-anchor="end" class="ax">₹3 Cr</text><line x1="90" x2="1010" y1="170" y2="170" class="gl"/><text x="74" y="178" text-anchor="end" class="ax">₹6 Cr</text><line x1="90" x2="1010" y1="20" y2="20" class="gl"/><text x="74" y="28" text-anchor="end" class="ax">₹9 Cr</text><text x="90" y="510" text-anchor="middle" class="ax">Jan</text><text x="274" y="510" text-anchor="middle" class="ax">Feb</text><text x="458" y="510" text-anchor="middle" class="ax">Mar</text><text x="642" y="510" text-anchor="middle" class="ax">Apr</text><text x="826" y="510" text-anchor="middle" class="ax">May</text><text x="1010" y="510" text-anchor="middle" class="ax">Jun</text>
+      <g id="s8-q"><line x1="550" x2="550" y1="20" y2="470" class="qdiv"/><text x="532" y="44" text-anchor="end" class="qlab">Jan–Mar</text><text x="568" y="44" class="qlab">Apr–Jun</text></g>
+      <path d="M90,46 L274,101 L458,66.5 L642,91.5 L826,92 L1010,123.5" class="ln total" id="s8-lt" stroke-dasharray="938"/>
+      <g id="s8-dt"><circle cx="90" cy="46" r="7" class="dot total"/><circle cx="274" cy="101" r="7" class="dot total"/><circle cx="458" cy="66.5" r="7" class="dot total"/><circle cx="642" cy="91.5" r="7" class="dot total"/><circle cx="826" cy="92" r="7" class="dot total"/><circle cx="1010" cy="123.5" r="7" class="dot total"/></g>
+      <path d="M90,241.5 L274,275 L458,266 L642,284.5 L826,299 L1010,321.5" class="ln elec" id="s8-le" stroke-dasharray="929"/>
+      <g id="s8-de"><circle cx="90" cy="241.5" r="7" class="dot elec"/><circle cx="274" cy="275" r="7" class="dot elec"/><circle cx="458" cy="266" r="7" class="dot elec"/><circle cx="642" cy="284.5" r="7" class="dot elec"/><circle cx="826" cy="299" r="7" class="dot elec"/><circle cx="1010" cy="321.5" r="7" class="dot elec"/></g>
+      <path d="M90,420 L274,422.5 L458,412.5 L642,411.5 L826,404 L1010,402.5" class="ln app" id="s8-la" stroke-dasharray="923"/>
+      <g id="s8-da"><circle cx="90" cy="420" r="7" class="dot app"/><circle cx="274" cy="422.5" r="7" class="dot app"/><circle cx="458" cy="412.5" r="7" class="dot app"/><circle cx="642" cy="411.5" r="7" class="dot app"/><circle cx="826" cy="404" r="7" class="dot app"/><circle cx="1010" cy="402.5" r="7" class="dot app"/></g>
+    </svg>
+    <div class="lc-key"><span id="s8-k0"><i class="k-total"></i>All revenue</span><span id="s8-k1"><i class="k-elec"></i>Electronics</span><span id="s8-k2"><i class="k-app"></i>Apparel</span></div>
+  </div>
+  <div class="callouts">
+    <div class="co" id="s8-c0"><div class="co-l">All revenue</div><div class="co-v bad">−18%</div><div class="co-n">₹8.48 Cr in January → ₹6.93 Cr in June</div></div>
+    <div class="co" id="s8-c1"><div class="co-l">Electronics · quarter on quarter</div><div class="co-v bad">−20%</div><div class="co-n">−₹2.45 Cr — more than the whole drop</div></div>
+    <div class="co" id="s8-c2"><div class="co-l">Apparel · quarter on quarter</div><div class="co-v good">+23%</div><div class="co-n">+₹72.8 L — share up from 13% to 17%</div></div>
+  </div></div></section>
+<section id="s9" class="clip scene-clip" data-start="72.53" data-duration="10.05" data-track-index="1"><div class="scene " id="s9-in">
+  <div class="insight-head">
+    <div class="eyebrow">Every city, day and product</div>
+    <h2 class="big-h one">Ranked, compared and explained.</h2>
+  </div>
+  <div class="cards3">
+    <div class="sc" id="s9-c0"><div class="sc-l">Top city</div><div class="sc-v">Vijayawada</div><div class="sc-n"><b>₹10.1 Cr</b> · 22% of revenue</div>
+      <div class="mini-h"><div class="mh"><span>Vijayawada</span><i style="width:250px" class="on"></i></div><div class="mh"><span>Guntur</span><i style="width:234.16px" class=""></i></div><div class="mh"><span>Tirupati</span><i style="width:206.93px" class=""></i></div><div class="mh"><span>Rajahmundry</span><i style="width:173.51px" class=""></i></div><div class="mh"><span>Nellore</span><i style="width:137.87px" class=""></i></div><div class="mh"><span>Kakinada</span><i style="width:135.64px" class=""></i></div></div></div>
+    <div class="sc" id="s9-c1"><div class="sc-l">Busiest day</div><div class="sc-v">Saturday</div><div class="sc-n"><b>19%</b> of transactions · Monday is quietest</div>
+      <div class="mini-v"><div class="mv"><i style="height:91.41px" class=""></i><span>M</span></div><div class="mv"><i style="height:96.09px" class=""></i><span>T</span></div><div class="mv"><i style="height:93.75px" class=""></i><span>W</span></div><div class="mv"><i style="height:99.22px" class=""></i><span>T</span></div><div class="mv"><i style="height:116.41px" class=""></i><span>F</span></div><div class="mv"><i style="height:150px" class="on"></i><span>S</span></div><div class="mv"><i style="height:133.59px" class=""></i><span>S</span></div></div></div>
+    <div class="sc" id="s9-c2"><div class="sc-l">Top products</div><div class="sc-v">15 of 25</div><div class="sc-n">bring in <b>80%</b> of revenue</div>
+      <div class="mini-sq"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i><i class=""></i></div><div class="sc-f">Top product: Headphones · ₹4.77 Cr</div></div>
+  </div></div></section>
+<section id="s10" class="clip scene-clip" data-start="82.09" data-duration="4.91" data-track-index="2"><div class="scene " id="s10-in">
+  <div class="insight-head"><div class="eyebrow">Then, what to do next</div></div>
+  <div class="recs" id="s10-recs"><img src="assets/ui/sec-recs.png" alt=""></div>
+  <div class="export-row"><div class="ex-l" id="s10-exl">Export the whole report</div>
+    <div class="ex" id="s10-e0"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>PDF</span></div><div class="ex" id="s10-e1"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>HTML</span></div><div class="ex" id="s10-e2"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Markdown</span></div><div class="ex" id="s10-e3"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v5h5M9 13h6M9 17h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Cleaned CSV</span></div></div></div></section>
+<section id="s11" class="clip scene-clip" data-start="86.5" data-duration="5.65" data-track-index="1"><div class="scene " id="s11-in">
+  <div class="center-stack outro">
+    <div class="logo-row"><div class="mark big" id="s11-mark"><svg viewBox="0 0 32 32" width="150" height="150" aria-hidden="true"><defs><linearGradient id="g150" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#13909d"/><stop offset="1" stop-color="#0a5f69"/></linearGradient></defs><rect width="32" height="32" rx="8" fill="url(#g150)"/><rect x="7" y="16" width="4.5" height="10" rx="1.5" fill="#fff" opacity=".75"/><rect x="13.75" y="7" width="4.5" height="19" rx="1.5" fill="#fff"/><rect x="20.5" y="12" width="4.5" height="14" rx="1.5" fill="#fff" opacity=".88"/></svg></div><div class="wordmark big" id="s11-word">Clarity</div></div>
+    <div class="tagline" id="s11-tag">Turn any spreadsheet into <span class="grad">a report you can act on</span></div>
+    <div class="url-pill" id="s11-url">clarityeda.netlify.app</div>
+  </div></div></section>
+  <audio id="music" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3" data-start="0" data-duration="92.15" data-track-index="10" data-volume="1" data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0},{"t":1.2,"v":0.16},{"t":89.55,"v":0.16},{"t":90.35,"v":0.34},{"t":89.95,"v":0.34},{"t":92.15,"v":0}]}]}'></audio>
+  <audio id="vo-01" src="assets/vo/vo-01.wav" data-start="0.5" data-duration="9.26" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-02" src="assets/vo/vo-02.wav" data-start="10.16" data-duration="3.03" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-03" src="assets/vo/vo-03.wav" data-start="13.59" data-duration="6.25" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-04" src="assets/vo/vo-04.wav" data-start="20.24" data-duration="7.45" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-05" src="assets/vo/vo-05.wav" data-start="28.08" data-duration="9.77" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-06" src="assets/vo/vo-06.wav" data-start="38.25" data-duration="8.26" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-07" src="assets/vo/vo-07.wav" data-start="46.91" data-duration="11.41" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-08" src="assets/vo/vo-08.wav" data-start="58.72" data-duration="13.61" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-09" src="assets/vo/vo-09.wav" data-start="72.73" data-duration="9.15" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-10" src="assets/vo/vo-10.wav" data-start="82.29" data-duration="4.01" data-track-index="11" data-volume="1"></audio>
+  <audio id="vo-11" src="assets/vo/vo-11.wav" data-start="86.7" data-duration="3.05" data-track-index="11" data-volume="1"></audio>
+  <audio id="sfx-0" src="assets/sfx/ui/click2.ogg" data-start="2.2" data-duration="0.06" data-track-index="20" data-volume="0.35"></audio>
+  <audio id="sfx-1" src="assets/sfx/impact/impactSoft_medium_001.ogg" data-start="13.64" data-duration="0.18" data-track-index="21" data-volume="0.6"></audio>
+  <audio id="sfx-2" src="assets/sfx/interface/drop_002.ogg" data-start="20.64" data-duration="0.19" data-track-index="22" data-volume="0.45"></audio>
+  <audio id="sfx-3" src="assets/sfx/interface/drop_002.ogg" data-start="21.7" data-duration="0.19" data-track-index="23" data-volume="0.4"></audio>
+  <audio id="sfx-4" src="assets/sfx/interface/click_002.ogg" data-start="24.24" data-duration="0.01" data-track-index="20" data-volume="0.35"></audio>
+  <audio id="sfx-5" src="assets/sfx/interface/click_002.ogg" data-start="25.28" data-duration="0.01" data-track-index="21" data-volume="0.35"></audio>
+  <audio id="sfx-6" src="assets/sfx/interface/click_002.ogg" data-start="27.29" data-duration="0.01" data-track-index="22" data-volume="0.35"></audio>
+  <audio id="sfx-7" src="assets/sfx/interface/click_002.ogg" data-start="27.74" data-duration="0.01" data-track-index="23" data-volume="0.35"></audio>
+  <audio id="sfx-8" src="assets/sfx/ui/rollover2.ogg" data-start="28.68" data-duration="0.06" data-track-index="20" data-volume="0.3"></audio>
+  <audio id="sfx-9" src="assets/sfx/ui/rollover2.ogg" data-start="32.44" data-duration="0.06" data-track-index="21" data-volume="0.3"></audio>
+  <audio id="sfx-10" src="assets/sfx/ui/rollover2.ogg" data-start="34.6" data-duration="0.06" data-track-index="22" data-volume="0.3"></audio>
+  <audio id="sfx-11" src="assets/sfx/ui/rollover2.ogg" data-start="36.68" data-duration="0.06" data-track-index="23" data-volume="0.3"></audio>
+  <audio id="sfx-12" src="assets/sfx/casino/card-slide-1.ogg" data-start="75.53" data-duration="0.6" data-track-index="20" data-volume="0.3"></audio>
+  <audio id="sfx-13" src="assets/sfx/casino/card-slide-1.ogg" data-start="77.13" data-duration="0.6" data-track-index="21" data-volume="0.3"></audio>
+  <audio id="sfx-14" src="assets/sfx/casino/card-slide-1.ogg" data-start="79.52" data-duration="0.6" data-track-index="22" data-volume="0.3"></audio>
+  <audio id="sfx-15" src="assets/sfx/interface/click_003.ogg" data-start="84.05" data-duration="0.01" data-track-index="23" data-volume="0.3"></audio>
+  <audio id="sfx-16" src="assets/sfx/interface/click_003.ogg" data-start="84.19" data-duration="0.01" data-track-index="20" data-volume="0.3"></audio>
+  <audio id="sfx-17" src="assets/sfx/interface/click_003.ogg" data-start="84.33" data-duration="0.01" data-track-index="21" data-volume="0.3"></audio>
+  <audio id="sfx-18" src="assets/sfx/interface/click_003.ogg" data-start="84.47" data-duration="0.01" data-track-index="22" data-volume="0.3"></audio>
+  <audio id="sfx-19" src="assets/sfx/interface/bong_001.ogg" data-start="86.74" data-duration="0.12" data-track-index="23" data-volume="0.45"></audio>
+</div>
+<script>
+var T = {"S":[0,9.958667,13.387999999999998,20.038666999999997,27.883999999999997,38.054666999999995,46.710667,58.52400000000001,72.53466700000001,82.08666700000002,86.49733400000002,92.15],"TOTAL":92.15,"XF":0.5,"s1Sub":1.2,"s1Cities":2.4699999999999998,"s1Rows":6.34,"s1Q":7.16,"s2Not":11.97,"s3Logo":{"t":13.64,"locked":"strongCue"},"s3Tag":14.75,"s3Shot":17.59,"s4Chip":20.388666999999998,"s4Card":21.5,"s4Local":22,"s4Steps":[24.24,25.28,27.29,27.74],"s5Roles":[28.68,32.44,34.6,36.68],"s6Push":38.68,"s6Tx":40.3,"s6Rev":42.36,"s6Take":44.75,"s7Bars":47.210667,"s7Elec":48.8,"s7Half":52.17,"s7Groc":53.68,"s7Nine":57.23,"s8Total":58.92400000000001,"s8Pct":61.73,"s8Elec":66.32,"s8Q":68.46,"s8App":69.76,"s9Cards":[75.53,77.13,79.52],"s10Recs":82.38666700000002,"s10Exp":84.05,"s11Logo":{"t":86.74,"locked":"beat","intensity":0.81},"s11Tag":87.43,"s11Url":89.37,"vo":[{"id":"01","start":0.5,"d":9.26},{"id":"02","start":10.16,"d":3.03},{"id":"03","start":13.59,"d":6.25},{"id":"04","start":20.24,"d":7.45},{"id":"05","start":28.08,"d":9.77},{"id":"06","start":38.25,"d":8.26},{"id":"07","start":46.91,"d":11.41},{"id":"08","start":58.72,"d":13.61},{"id":"09","start":72.73,"d":9.15},{"id":"10","start":82.29,"d":4.01},{"id":"11","start":86.7,"d":3.05}],"s3LogoT":13.64,"s11LogoT":86.74,"s8Len":{"total":938,"elec":929,"app":923}};
+var REACT = [[0.34,0.09],[0.36,0.16],[0.33,0.1],[0.26,0.01],[0.24,0.01],[0.16,0],[0.27,0],[0.12,0],[0.37,0.01],[0.25,0],[0.15,0],[0.04,0],[0.17,0],[0.13,0],[0.21,0],[0.23,0],[0.18,0],[0.06,0],[0.05,0],[0.24,0],[0.18,0],[0.08,0],[0.07,0],[0.26,0],[0.26,0],[0.3,0],[0.24,0],[0.21,0],[0.05,0],[0.26,0],[0.2,0],[0.13,0],[0.1,0],[0.23,0],[0.18,0],[0.28,0.01],[0.2,0],[0.25,0],[0.13,0],[0.25,0],[0.14,0],[0.35,0],[0.23,0],[0.08,0],[0.06,0],[0.37,0.01],[0.33,0],[0.3,0],[0.21,0],[0.12,0],[0.03,0],[0.24,0],[0.25,0],[0.17,0],[0.07,0],[0.26,0],[0.25,0],[0.33,0],[0.24,0],[0.21,0],[0.23,0],[0.06,0],[0.26,0],[0.18,0],[0.13,0],[0.1,0.01],[0.39,0.17],[0.34,0.15],[0.28,0.02],[0.17,0.01],[0.21,0],[0.08,0],[0.19,0],[0.07,0],[0.31,0],[0.29,0],[0.07,0],[0.03,0],[0.2,0],[0.11,0],[0.29,0],[0.2,0],[0.1,0],[0.05,0],[0.33,0.01],[0.19,0],[0.11,0],[0.06,0],[0.33,0.01],[0.25,0],[0.35,0.01],[0.23,0],[0.22,0],[0.18,0],[0.24,0],[0.22,0],[0.17,0],[0.06,0],[0.3,0],[0.18,0],[0.26,0.01],[0.23,0],[0.26,0],[0.21,0],[0.23,0.01],[0.18,0],[0.26,0],[0.29,0],[0.15,0],[0.07,0],[0.05,0.01],[0.36,0],[0.27,0.01],[0.23,0],[0.18,0],[0.05,0],[0.04,0],[0.26,0],[0.2,0],[0.1,0],[0.07,0],[0.32,0],[0.2,0],[0.28,0.01],[0.22,0],[0.23,0],[0.16,0],[0.34,0],[0.21,0],[0.15,0],[0.1,0],[0.74,0.54],[0.44,0.48],[0.36,0.09],[0.37,0.14],[0.31,0.14],[0.25,0.14],[0.34,0.15],[0.27,0.15],[0.66,0.44],[0.47,0.58],[0.26,0.13],[0.23,0.12],[0.29,0.13],[0.23,0.12],[0.32,0.14],[0.3,0.12],[0.52,0.13],[0.52,0.67],[0.25,0.08],[0.39,0.17],[0.29,0.13],[0.25,0.13],[0.25,0.14],[0.31,0.12],[0.41,0.16],[0.62,0.69],[0.29,0.17],[0.27,0.11],[0.19,0.11],[0.37,0.05],[0.39,0.09],[0.33,0.11],[0.31,0.11],[0.69,0.78],[0.31,0.31],[0.36,0.02],[0.31,0.01],[0.3,0],[0.26,0],[0.3,0.01],[0.26,0.01],[0.65,0.55],[0.42,0.4],[0.2,0.02],[0.2,0],[0.46,0],[0.39,0],[0.38,0],[0.32,0.01],[0.67,0.49],[0.48,0.56],[0.34,0.03],[0.33,0],[0.27,0.01],[0.27,0],[0.33,0.01],[0.28,0.01],[0.56,0.26],[0.55,0.61],[0.29,0.05],[0.3,0],[0.28,0.01],[0.32,0],[0.28,0],[0.27,0],[0.42,0.08],[0.62,0.64],[0.32,0.12],[0.36,0.11],[0.31,0.13],[0.26,0.14],[0.27,0.15],[0.29,0.15],[0.28,0.16],[0.65,0.73],[0.31,0.22],[0.22,0.12],[0.23,0.14],[0.26,0.14],[0.23,0.13],[0.33,0.13],[0.28,0.12],[0.69,0.71],[0.34,0.37],[0.31,0.1],[0.26,0.12],[0.23,0.12],[0.22,0.12],[0.35,0.12],[0.32,0.12],[0.62,0.5],[0.46,0.48],[0.28,0.1],[0.28,0.14],[0.33,0.02],[0.38,0.1],[0.33,0.12],[0.44,0.13],[0.67,0.46],[0.46,0.59],[0.34,0.05],[0.36,0],[0.36,0],[0.3,0],[0.31,0],[0.27,0],[0.52,0.17],[0.54,0.57],[0.24,0.15],[0.24,0.01],[0.26,0.01],[0.5,0],[0.41,0],[0.36,0],[0.36,0.04],[0.61,0.71],[0.24,0.17],[0.38,0.01],[0.39,0],[0.3,0.01],[0.26,0.01],[0.41,0.01],[0.22,0.02],[0.51,0.03],[0.46,0.04],[0.29,0.02],[0.25,0],[0.31,0],[0.27,0],[0.25,0],[0.22,0],[0.78,0.57],[0.57,0.32],[0.57,0.28],[0.38,0.16],[0.18,0.01],[0.15,0],[0.29,0],[0.14,0],[0.78,0.53],[0.47,0.52],[0.23,0.04],[0.14,0],[0.18,0],[0.14,0],[0.32,0],[0.31,0],[0.62,0.3],[0.52,0.64],[0.21,0.05],[0.25,0],[0.28,0.05],[0.42,0.14],[0.43,0.15],[0.42,0.16],[0.53,0.28],[0.62,0.71],[0.21,0.12],[0.32,0.13],[0.35,0.17],[0.5,0.2],[0.48,0.18],[0.49,0.21],[0.46,0.2],[0.71,0.81],[0.36,0.22],[0.43,0.26],[0.44,0.29],[0.29,0.1],[0.21,0],[0.19,0.01],[0.16,0.01],[0.8,0.85],[0.38,0.35],[0.29,0.01],[0.05,0],[0.52,0.17],[0.43,0.12],[0.5,0.1],[0.51,0.08],[0.76,0.56],[0.41,0.39],[0.41,0.03],[0.2,0.01],[0.57,0.15],[0.51,0.14],[0.49,0.12],[0.46,0.12],[0.7,0.36],[0.49,0.48],[0.36,0.05],[0.4,0.07],[0.43,0.09],[0.48,0.15],[0.44,0.12],[0.48,0.02],[0.57,0.22],[0.64,0.7],[0.41,0.16],[0.45,0.22],[0.41,0.24],[0.16,0.1],[0.19,0.01],[0.18,0],[0.27,0.06],[0.7,0.81],[0.24,0.19],[0.18,0.01],[0.06,0],[0.16,0.01],[0.12,0],[0.3,0],[0.27,0.02],[0.74,0.82],[0.3,0.26],[0.22,0.01],[0.19,0],[0.48,0.19],[0.47,0.19],[0.4,0.19],[0.39,0.2],[0.73,0.59],[0.38,0.35],[0.31,0.1],[0.3,0.12],[0.51,0.19],[0.51,0.15],[0.43,0.18],[0.45,0.21],[0.73,0.47],[0.41,0.44],[0.38,0.19],[0.44,0.24],[0.36,0.21],[0.26,0.03],[0.18,0],[0.2,0],[0.68,0.3],[0.51,0.57],[0.25,0.07],[0.24,0.01],[0.26,0.07],[0.4,0.12],[0.4,0.08],[0.46,0.07],[0.46,0.16],[0.66,0.77],[0.46,0.1],[0.24,0.03],[0.18,0.02],[0.47,0.12],[0.44,0.09],[0.45,0.1],[0.47,0.1],[0.66,0.69],[0.45,0.22],[0.48,0.06],[0.5,0.09],[0.47,0.04],[0.46,0.01],[0.51,0.02],[0.46,0.02],[0.69,0.72],[0.43,0.31],[0.4,0.13],[0.4,0.16],[0.21,0.17],[0.1,0.03],[0.24,0],[0.16,0],[0.81,0.64],[0.41,0.46],[0.2,0.02],[0.1,0],[0.16,0],[0.12,0],[0.32,0],[0.26,0],[0.72,0.43],[0.49,0.56],[0.22,0.03],[0.2,0],[0.34,0.14],[0.51,0.24],[0.5,0.26],[0.48,0.26],[0.65,0.26],[0.57,0.63],[0.23,0.1],[0.3,0.14],[0.36,0.14],[0.48,0.15],[0.43,0.13],[0.47,0.19],[0.48,0.12],[0.72,0.82],[0.39,0.22],[0.45,0.26],[0.47,0.29],[0.3,0.11],[0.17,0],[0.19,0],[0.18,0.02],[0.74,0.73],[0.35,0.28],[0.3,0.01],[0.06,0],[0.5,0.13],[0.43,0.01],[0.5,0.03],[0.46,0.05],[0.77,0.74],[0.38,0.34],[0.38,0.07],[0.41,0.08],[0.51,0.07],[0.51,0.08],[0.5,0.08],[0.44,0.08],[0.71,0.48],[0.48,0.46],[0.39,0.06],[0.58,0.04],[0.51,0.08],[0.54,0.15],[0.44,0.21],[0.5,0.35],[0.64,0.48],[0.59,0.7],[0.46,0.06],[0.54,0.03],[0.5,0.1],[0.16,0.04],[0.28,0],[0.24,0],[0.38,0.11],[0.65,0.72],[0.3,0.12],[0.28,0],[0.12,0],[0.2,0],[0.09,0],[0.29,0],[0.27,0.03],[0.75,0.86],[0.2,0.2],[0.21,0],[0.18,0.01],[0.61,0.05],[0.6,0.04],[0.56,0.02],[0.54,0.06],[0.68,0.69],[0.35,0.29],[0.15,0],[0.11,0],[0.49,0.05],[0.54,0.02],[0.41,0.06],[0.53,0.01],[0.79,0.61],[0.44,0.39],[0.41,0.02],[0.42,0.01],[0.41,0.01],[0.34,0],[0.22,0],[0.2,0],[0.71,0.37],[0.51,0.51],[0.32,0.04],[0.12,0],[0.33,0.06],[0.47,0.12],[0.52,0.11],[0.54,0.11],[0.66,0.22],[0.62,0.69],[0.39,0.13],[0.28,0.03],[0.29,0.07],[0.53,0.23],[0.49,0.22],[0.51,0.23],[0.46,0.25],[0.65,0.66],[0.47,0.25],[0.5,0.15],[0.5,0.17],[0.54,0.17],[0.47,0.17],[0.57,0.23],[0.48,0.28],[0.81,0.87],[0.38,0.27],[0.3,0.05],[0.22,0.02],[0.25,0],[0.15,0],[0.24,0],[0.11,0],[0.79,0.73],[0.36,0.38],[0.12,0.01],[0.05,0],[0.21,0],[0.14,0],[0.26,0],[0.21,0],[0.76,0.6],[0.43,0.55],[0.24,0.02],[0.19,0],[0.14,0],[0.08,0],[0.23,0],[0.26,0],[0.64,0.29],[0.55,0.63],[0.27,0.05],[0.25,0],[0.11,0],[0.26,0],[0.23,0],[0.15,0],[0.29,0.12],[0.71,0.86],[0.22,0.11],[0.3,0],[0.24,0],[0.22,0],[0.09,0],[0.24,0],[0.15,0.03],[0.75,0.85],[0.27,0.22],[0.09,0.01],[0.08,0],[0.36,0.01],[0.29,0],[0.27,0],[0.23,0],[0.76,0.84],[0.31,0.34],[0.28,0.01],[0.24,0],[0.15,0],[0.13,0],[0.22,0],[0.19,0],[0.77,0.65],[0.4,0.44],[0.24,0.01],[0.22,0],[0.27,0],[0.25,0],[0.21,0],[0.17,0],[0.71,0.47],[0.52,0.57],[0.24,0.05],[0.26,0.02],[0.22,0.01],[0.23,0],[0.22,0],[0.18,0],[0.49,0.18],[0.63,0.75],[0.2,0.09],[0.06,0],[0.06,0],[0.21,0],[0.17,0],[0.25,0],[0.23,0.08],[0.77,0.94],[0.17,0.18],[0.23,0],[0.22,0],[0.11,0],[0.08,0],[0.27,0],[0.26,0.02],[0.73,0.78],[0.35,0.26],[0.25,0.01],[0.17,0],[0.27,0],[0.25,0],[0.16,0],[0.12,0],[0.81,0.78],[0.39,0.37],[0.27,0.01],[0.24,0],[0.25,0],[0.15,0],[0.27,0],[0.22,0],[0.73,0.54],[0.46,0.51],[0.11,0.03],[0.09,0],[0.32,0.01],[0.38,0.01],[0.28,0],[0.26,0],[0.65,0.32],[0.58,0.69],[0.2,0.06],[0.23,0],[0.25,0],[0.1,0],[0.39,0.18],[0.66,0.83],[0.31,0.09],[0.38,0],[0.27,0],[0.21,0],[0.19,0],[0.25,0],[0.21,0],[0.27,0],[0.24,0.04],[0.73,0.86],[0.43,0.26],[0.46,0.26],[0.48,0.29],[0.26,0.13],[0.14,0.01],[0.21,0],[0.17,0],[0.75,0.79],[0.33,0.36],[0.1,0.01],[0.06,0],[0.15,0],[0.13,0],[0.22,0],[0.2,0],[0.87,0.76],[0.39,0.49],[0.16,0.01],[0.1,0],[0.36,0.19],[0.39,0.23],[0.48,0.23],[0.43,0.22],[0.67,0.41],[0.51,0.59],[0.19,0.05],[0.21,0.03],[0.33,0.1],[0.48,0.13],[0.41,0.13],[0.4,0.22],[0.58,0.17],[0.69,0.84],[0.31,0.22],[0.41,0.31],[0.44,0.31],[0.15,0.03],[0.12,0],[0.15,0],[0.22,0.06],[0.72,0.83],[0.27,0.17],[0.35,0.09],[0.43,0.12],[0.49,0.22],[0.45,0.21],[0.48,0.21],[0.47,0.22],[0.71,0.77],[0.29,0.23],[0.36,0.13],[0.41,0.15],[0.48,0.14],[0.46,0.12],[0.46,0.12],[0.45,0.11],[0.75,0.66],[0.34,0.36],[0.39,0.12],[0.47,0.15],[0.45,0.14],[0.42,0.16],[0.34,0.24],[0.38,0.25],[0.79,0.48],[0.46,0.46],[0.35,0.19],[0.47,0.26],[0.37,0.24],[0.14,0.02],[0.18,0],[0.12,0],[0.63,0.31],[0.56,0.65],[0.13,0.06],[0.07,0],[0.24,0],[0.14,0],[0.16,0],[0.21,0],[0.28,0.14],[0.74,0.91],[0.17,0.13],[0.08,0],[0.13,0.02],[0.39,0.16],[0.39,0.18],[0.38,0.19],[0.37,0.2],[0.7,0.79],[0.21,0.22],[0.22,0.06],[0.22,0.08],[0.44,0.13],[0.36,0.13],[0.39,0.23],[0.39,0.23],[0.7,0.77],[0.34,0.34],[0.37,0.22],[0.39,0.28],[0.26,0.08],[0.15,0.01],[0.14,0],[0.1,0],[0.72,0.62],[0.42,0.43],[0.31,0.07],[0.42,0.11],[0.49,0.12],[0.45,0.12],[0.43,0.1],[0.45,0.11],[0.77,0.52],[0.52,0.63],[0.44,0.06],[0.25,0.09],[0.5,0.08],[0.47,0.09],[0.43,0.09],[0.44,0.09],[0.53,0.15],[0.63,0.68],[0.41,0.06],[0.51,0.06],[0.55,0.04],[0.53,0.11],[0.44,0.12],[0.43,0.12],[0.43,0.21],[0.86,1],[0.47,0.19],[0.5,0.19],[0.53,0.21],[0.51,0.2],[0.49,0.2],[0.47,0.2],[0.46,0.19],[0.43,0.2],[0.43,0.19],[0.43,0.2],[0.4,0.19],[0.41,0.2],[0.38,0.2],[0.38,0.19],[0.36,0.19],[0.31,0.2],[0.32,0.19],[0.36,0.19],[0.31,0.19],[0.31,0.19],[0.32,0.19],[0.37,0.2],[0.36,0.19],[0.44,0.17],[0.44,0.19],[0.4,0.19],[0.39,0.19],[0.4,0.21],[0.41,0.19],[0.38,0.21],[0.43,0.2],[0.44,0.2],[0.41,0.21],[0.41,0.23],[0.32,0.21],[0.41,0.22],[0.48,0.19],[0.46,0.18],[0.43,0.17],[0.43,0.16],[0.36,0.13],[0.4,0.14],[0.35,0.14],[0.33,0.15],[0.37,0.1],[0.38,0.09],[0.41,0.1],[0.4,0.1],[0.38,0.1],[0.41,0.11],[0.43,0.1],[0.42,0.1],[0.41,0.1],[0.42,0.1],[0.44,0.1],[0.41,0.1],[0.5,0.1],[0.48,0.11],[0.46,0.1],[0.41,0.1],[0.43,0.1],[0.39,0.11],[0.37,0.11],[0.32,0.12],[0.42,0.15],[0.47,0.19],[0.49,0.21],[0.49,0.2],[0.5,0.21],[0.49,0.21],[0.5,0.21],[0.48,0.2],[0.49,0.2],[0.5,0.21],[0.54,0.25],[0.46,0.21],[0.45,0.21],[0.4,0.18],[0.38,0.18],[0.36,0.17],[0.33,0.18],[0.34,0.18],[0.36,0.18],[0.3,0.16],[0.37,0.18],[0.41,0.16],[0.4,0.16],[0.34,0.17],[0.35,0.16],[0.36,0.16],[0.32,0.16],[0.3,0.16],[0.27,0.17],[0.37,0.16],[0.35,0.16],[0.35,0.15],[0.35,0.16],[0.4,0.23],[0.39,0.29],[0.4,0.32],[0.33,0.35],[0.44,0.34],[0.42,0.36],[0.35,0.37],[0.32,0.37],[0.44,0.35],[0.42,0.37],[0.4,0.37],[0.41,0.38],[0.46,0.16],[0.46,0.15],[0.47,0.16],[0.44,0.16],[0.39,0.16],[0.37,0.16],[0.41,0.17],[0.38,0.17],[0.39,0.18],[0.42,0.18],[0.36,0.19],[0.33,0.18],[0.43,0.18],[0.43,0.19],[0.4,0.18],[0.41,0.19],[0.38,0.18],[0.47,0.16],[0.39,0.17],[0.34,0.17],[0.39,0.19],[0.67,0.77],[0.36,0.13],[0.44,0.18],[0.43,0.2],[0.48,0.2],[0.48,0.2],[0.48,0.2],[0.48,0.17],[0.71,0.73],[0.37,0.2],[0.37,0.13],[0.37,0.16],[0.37,0.15],[0.33,0.14],[0.31,0.13],[0.31,0.12],[0.7,0.77],[0.34,0.33],[0.29,0.06],[0.33,0.07],[0.39,0.06],[0.4,0.07],[0.34,0.06],[0.34,0.06],[0.73,0.59],[0.45,0.46],[0.26,0.04],[0.23,0.04],[0.42,0.05],[0.39,0.04],[0.37,0.04],[0.32,0.03],[0.73,0.41],[0.51,0.51],[0.32,0.13],[0.39,0.17],[0.48,0.18],[0.46,0.17],[0.38,0.18],[0.36,0.17],[0.54,0.24],[0.64,0.72],[0.3,0.12],[0.32,0.13],[0.34,0.13],[0.53,0.16],[0.53,0.15],[0.52,0.16],[0.53,0.19],[0.7,0.83],[0.42,0.22],[0.45,0.13],[0.38,0.16],[0.44,0.16],[0.43,0.17],[0.4,0.17],[0.36,0.16],[0.67,0.66],[0.32,0.26],[0.34,0.13],[0.37,0.17],[0.45,0.17],[0.46,0.18],[0.44,0.17],[0.45,0.18],[0.77,0.71],[0.42,0.31],[0.42,0.06],[0.38,0.1],[0.5,0.09],[0.44,0.09],[0.46,0.08],[0.44,0.11],[0.64,0.54],[0.45,0.43],[0.33,0.06],[0.4,0.1],[0.38,0.11],[0.43,0.11],[0.39,0.12],[0.44,0.12],[0.64,0.32],[0.55,0.62],[0.33,0.06],[0.27,0.09],[0.39,0.11],[0.42,0.11],[0.42,0.11],[0.42,0.12],[0.43,0.12],[0.62,0.7],[0.24,0.1],[0.27,0.08],[0.29,0.1],[0.5,0.13],[0.45,0.13],[0.46,0.13],[0.45,0.14],[0.75,0.83],[0.38,0.23],[0.36,0.08],[0.38,0.13],[0.42,0.13],[0.41,0.14],[0.37,0.12],[0.36,0.13],[0.72,0.77],[0.39,0.34],[0.29,0.08],[0.29,0.11],[0.56,0.13],[0.5,0.15],[0.49,0.17],[0.48,0.18],[0.8,0.74],[0.41,0.4],[0.36,0.15],[0.38,0.19],[0.52,0.2],[0.44,0.2],[0.41,0.19],[0.38,0.19],[0.38,0.06],[0.36,0.01],[0.28,0.01],[0.29,0.03],[0.3,0.04],[0.31,0.03],[0.31,0.03],[0.48,0.07],[0.75,0.29],[0.65,0.69],[0.38,0.11],[0.43,0.16],[0.45,0.14],[0.11,0.02],[0.16,0.01],[0.31,0],[0.3,0.05],[0.73,0.77],[0.39,0.16],[0.38,0],[0.2,0],[0.14,0],[0.07,0],[0.38,0],[0.31,0.01],[0.75,0.83],[0.28,0.29],[0.33,0.01],[0.26,0],[0.53,0.16],[0.5,0.17],[0.54,0.17],[0.47,0.17],[0.71,0.61],[0.44,0.35],[0.29,0.02],[0.32,0.03],[0.54,0.15],[0.51,0.13],[0.5,0.25],[0.48,0.3],[0.76,0.53],[0.46,0.47],[0.39,0.19],[0.44,0.31],[0.43,0.23],[0.31,0.01],[0.22,0.01],[0.2,0],[0.63,0.24],[0.53,0.56],[0.42,0.17],[0.42,0.31],[0.47,0.29],[0.55,0.16],[0.57,0.14],[0.59,0.14],[0.57,0.16],[0.68,0.78],[0.31,0.12],[0.3,0],[0.2,0.05],[0.6,0.16],[0.59,0.15],[0.53,0.16],[0.46,0.17],[0.7,0.71],[0.39,0.17],[0.36,0.12],[0.44,0.14],[0.47,0.12],[0.43,0.13],[0.43,0.17],[0.45,0.22],[0.7,0.72],[0.41,0.3],[0.42,0.2],[0.44,0.25],[0.25,0.14],[0.12,0.01],[0.3,0],[0.27,0],[0.79,0.62],[0.45,0.42],[0.34,0.01],[0.18,0],[0.2,0],[0.12,0],[0.37,0],[0.35,0],[0.69,0.42],[0.5,0.58],[0.25,0.04],[0.29,0],[0.33,0.14],[0.56,0.3],[0.56,0.28],[0.54,0.28],[0.6,0.14],[0.55,0.65],[0.41,0.2],[0.47,0.23],[0.53,0.29],[0.56,0.16],[0.46,0.12],[0.51,0.2],[0.53,0.21],[0.71,0.79],[0.34,0.16],[0.31,0.11],[0.39,0.12],[0.32,0.01],[0.31,0],[0.29,0],[0.23,0.01],[0.64,0.61],[0.4,0.24],[0.49,0.2],[0.42,0.23],[0.56,0.16],[0.59,0.15],[0.62,0.14],[0.64,0.15],[0.79,0.69],[0.41,0.35],[0.31,0.01],[0.26,0],[0.61,0.07],[0.65,0.11],[0.51,0.08],[0.46,0.09],[0.69,0.42],[0.51,0.42],[0.4,0.04],[0.43,0.04],[0.41,0.13],[0.47,0.15],[0.52,0.12],[0.43,0.09],[0.58,0.32],[0.53,0.61],[0.35,0.18],[0.41,0.25],[0.46,0.29],[0.19,0.06],[0.25,0],[0.29,0],[0.4,0.1],[0.65,0.71],[0.32,0.1],[0.28,0],[0.13,0],[0.16,0],[0.1,0],[0.38,0],[0.31,0.04],[0.74,0.86],[0.21,0.22],[0.23,0],[0.23,0.01],[0.51,0.19],[0.47,0.19],[0.45,0.18],[0.41,0.13],[0.67,0.67],[0.4,0.3],[0.28,0.1],[0.28,0.13],[0.5,0.16],[0.46,0.13],[0.45,0.15],[0.51,0.19],[0.69,0.59],[0.45,0.42],[0.39,0.04],[0.41,0.03],[0.38,0.03],[0.32,0],[0.23,0],[0.19,0],[0.67,0.35],[0.51,0.53],[0.3,0.07],[0.36,0.08],[0.34,0.08],[0.47,0.02],[0.48,0.02],[0.5,0.01],[0.61,0.18],[0.61,0.72],[0.3,0.08],[0.31,0],[0.26,0.02],[0.54,0.06],[0.52,0.08],[0.44,0.1],[0.41,0.09],[0.7,0.7],[0.43,0.14],[0.37,0.03],[0.41,0.05],[0.69,0.16],[0.59,0.15],[0.58,0.25],[0.55,0.24],[0.72,0.71],[0.43,0.21],[0.43,0.03],[0.53,0.03],[0.36,0.09],[0.11,0.01],[0.48,0],[0.39,0],[0.73,0.65],[0.4,0.34],[0.31,0.01],[0.2,0],[0.31,0],[0.18,0],[0.31,0],[0.36,0],[0.72,0.56],[0.4,0.51],[0.33,0.02],[0.32,0],[0.47,0.1],[0.56,0.03],[0.57,0.04],[0.55,0.05],[0.62,0.22],[0.53,0.57],[0.28,0.04],[0.36,0],[0.35,0.07],[0.61,0.03],[0.56,0.08],[0.38,0],[0.35,0.12],[0.68,0.77],[0.41,0.11],[0.56,0.01],[0.56,0.01],[0.42,0.01],[0.35,0],[0.17,0],[0.21,0.03],[0.68,0.75],[0.42,0.2],[0.5,0.01],[0.49,0.02],[0.6,0.08],[0.63,0.1],[0.65,0.1],[0.63,0.1],[0.73,0.8],[0.38,0.3],[0.33,0.01],[0.3,0],[0.55,0.1],[0.62,0.1],[0.55,0.09],[0.41,0.08],[0.74,0.59],[0.44,0.39],[0.34,0.05],[0.37,0.06],[0.5,0.03],[0.62,0.02],[0.59,0.02],[0.61,0.12],[0.66,0.45],[0.5,0.54],[0.34,0.18],[0.29,0.16],[0.31,0.02],[0.38,0.03],[0.43,0.03],[0.49,0.02],[0.59,0.19],[0.6,0.66],[0.42,0.18],[0.46,0.27],[0.53,0.32],[0.44,0.08],[0.52,0.09],[0.52,0.07],[0.44,0.05],[0.71,0.85],[0.31,0.21],[0.43,0.18],[0.41,0.21],[0.49,0.1],[0.46,0.07],[0.48,0.06],[0.4,0.03],[0.64,0.64],[0.46,0.24],[0.35,0.15],[0.41,0.18],[0.56,0.09],[0.51,0.1],[0.46,0.15],[0.5,0.18],[0.78,0.66],[0.46,0.35],[0.42,0.11],[0.43,0.13],[0.39,0.15],[0.46,0.16],[0.41,0.17],[0.37,0.17],[0.71,0.42],[0.47,0.45],[0.33,0.03],[0.22,0.01],[0.4,0.08],[0.55,0.14],[0.57,0.13],[0.58,0.12],[0.66,0.37],[0.61,0.65],[0.36,0.06],[0.42,0.05],[0.39,0.05],[0.53,0.1],[0.55,0.09],[0.45,0.09],[0.49,0.12],[0.66,0.69],[0.37,0.12],[0.33,0.02],[0.38,0.03],[0.41,0.06],[0.4,0.06],[0.4,0.07],[0.37,0.06],[0.77,0.83],[0.29,0.22],[0.35,0.15],[0.39,0.17],[0.4,0.05],[0.37,0.04],[0.47,0.04],[0.45,0.04]];
+(function () {
+  var tl = gsap.timeline({ paused: true });
+  var S = T.S;
+  var E = 'power3.out';
+  function rise(sel, at, dy, d) { tl.fromTo(sel, { opacity: 0, y: dy == null ? 28 : dy }, { opacity: 1, y: 0, duration: d || 0.7, ease: E }, at); }
+  function fade(sel, at, d) { tl.fromTo(sel, { opacity: 0 }, { opacity: 1, duration: d || 0.5, ease: 'power1.out' }, at); }
+  function fadeOut(sel, at, d) { tl.to(sel, { opacity: 0, duration: d || 0.4, ease: 'power1.in' }, at); }
+
+  // ---- scene dissolves (inner wrappers; the framework owns clip visibility) ----
+  for (var i = 1; i <= 11; i++) {
+    var inner = '#s' + i + '-in';
+    tl.fromTo(inner, { opacity: 0 }, { opacity: 1, duration: i === 1 ? 0.5 : 0.6, ease: 'power1.out' }, S[i - 1]);
+    if (i < 11) tl.to(inner, { opacity: 0, duration: 0.45, ease: 'power1.in' }, S[i]);
+  }
+
+  // ---- audio-reactive ambient glow (music RMS + bass, 15fps) ----
+  gsap.set('#glow', { transformOrigin: '50% 40%' });
+  for (var f = 0; f < REACT.length; f++) {
+    tl.set('#glow', { opacity: 0.5 + 0.5 * REACT[f][0], scale: 1 + 0.06 * REACT[f][1] }, f / 15);
+  }
+
+  // ---- 1 · hook ----
+  rise('#s1-eb', 0.15, 18, 0.6);
+  var counter = { v: 0 };
+  var cEl = document.getElementById('s1-count');
+  tl.fromTo(counter, { v: 0 }, { v: 107836, duration: 1.95, ease: 'power2.out', onUpdate: function () { cEl.textContent = Math.round(counter.v).toLocaleString('en-US'); } }, 0.25);
+  fade('#s1-rows', 0.4, 0.6);
+  rise('#s1-sub', T.s1Sub, 20);
+  tl.fromTo('#s1-cities .pill', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: E, stagger: 0.09 }, T.s1Cities);
+  tl.to('#s1-rows', { color: '#0b7380', duration: 0.4 }, T.s1Rows);
+  rise('#s1-q', T.s1Q, 24, 0.8);
+
+  // ---- 2 · rows, not answers ----
+  tl.fromTo('#s2-sheet', { y: 0 }, { y: -300, duration: S[2] - S[1] + T.XF, ease: 'none' }, S[1]);
+  rise('#s2-card', S[1] + 0.15, 30);
+  rise('#s2-not', T.s2Not, 16, 0.6);
+
+  // ---- 3 · reveal ----
+  // beat-locked: logo lands on a strong cue of the vol-12 bed (see T.s3Logo)
+  tl.fromTo('#s3-mark', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.6)' }, T.s3LogoT);
+  tl.fromTo('#s3-word', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, ease: E }, T.s3LogoT + 0.15);
+  rise('#s3-tag', T.s3Tag, 20);
+  tl.to('#s3-top', { y: -300, duration: 1.1, ease: 'power3.inOut' }, T.s3Shot - 0.4);
+  tl.fromTo('#s3-shot', { opacity: 0, y: 420 }, { opacity: 1, y: 0, duration: 1.3, ease: E }, T.s3Shot - 0.3);
+
+  // ---- 4 · upload ----
+  rise('#s4-frame', S[3] + 0.05, 24, 0.8);
+  fade('#s4-dz', T.s4Chip - 0.1, 0.3);
+  tl.fromTo('#s4-chip', { opacity: 0, y: -170 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.in' }, T.s4Chip - 0.35);
+  tl.fromTo('#s4-card', { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.7, ease: E }, T.s4Card);
+  fade('#s4-local', T.s4Local, 0.5);
+  for (var k = 0; k < 4; k++) {
+    var act = k === 0 ? T.s4Card + 0.2 : T.s4Steps[k - 1];
+    tl.to('#s4-st' + k, { color: '#121417', duration: 0.25 }, act);
+    tl.to('#s4-b' + k, { borderColor: '#00929e', duration: 0.25 }, act);
+    tl.fromTo('#s4-ck' + k, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: 'back.out(2)' }, T.s4Steps[k]);
+  }
+
+  // ---- 5 · columns ----
+  rise('#s5-in .s5-frame', S[4] + 0.05, 24, 0.8);
+  rise('#s5-panel', S[4] + 0.3, 30);
+  for (var r = 0; r < 4; r++) tl.fromTo('#s5-r' + r, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.55, ease: E }, T.s5Roles[r]);
+  fade('#s5-h0', T.s5Roles[0], 0.35); fadeOut('#s5-h0', T.s5Roles[1], 0.35);
+  fade('#s5-h2', T.s5Roles[2], 0.35); fadeOut('#s5-h2', T.s5Roles[3], 0.35);
+  fade('#s5-h3', T.s5Roles[3], 0.35);
+
+  // ---- 6 · summary: camera push ----
+  var W6 = 1560, H6 = 880, K6 = 1560 / 1920, IH6 = 1200 * K6;
+  function focus(px, py, s) {
+    var x = W6 / 2 - px * K6 * s, y = H6 / 2 - py * K6 * s;
+    x = Math.min(0, Math.max(W6 - W6 * s, x)); y = Math.min(0, Math.max(H6 - IH6 * s, y));
+    return { x: x, y: y, scale: s };
+  }
+  var cam = '#s6-browser .cam';
+  gsap.set(cam, { transformOrigin: '0 0' });
+  rise('#s6-in .s6-frame', S[5] + 0.05, 24, 0.8);
+  var f0 = focus(1128, 540, 1.3), f1 = focus(1128, 850, 1.14);
+  tl.fromTo(cam, { x: 0, y: 0, scale: 1 }, { x: f0.x, y: f0.y, scale: f0.scale, duration: 1.6, ease: 'power2.inOut' }, T.s6Push);
+  tl.to(cam, { x: f1.x, y: f1.y, scale: f1.scale, duration: 1.4, ease: 'power2.inOut' }, T.s6Take - 0.5);
+  fade('#s6-r0', T.s6Tx, 0.35); fadeOut('#s6-r0', T.s6Rev, 0.3);
+  fade('#s6-r1', T.s6Rev, 0.35); fadeOut('#s6-r1', T.s6Take - 0.5, 0.3);
+  fade('#s6-r2', T.s6Take + 0.4, 0.4);
+
+  // ---- 7 · where the money is ----
+  rise('#s7-in .insight-head', S[6] + 0.15, 20);
+  fade('#s7-in .legend', S[6] + 0.4);
+  for (var c = 0; c < 5; c++) {
+    tl.fromTo(['#s7-g' + c, '#s7-t' + c], { scaleX: 0, transformOrigin: '0 50%' }, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, T.s7Bars + c * 0.12);
+    tl.fromTo('#s7-p' + c + ' .bv', { opacity: 0 }, { opacity: 1, duration: 0.4 }, T.s7Bars + c * 0.12 + 0.5);
+  }
+  tl.to(['#s7-p1', '#s7-p2', '#s7-p3', '#s7-p4'], { opacity: 0.3, duration: 0.4 }, T.s7Elec);
+  tl.to('#s7-p0', { opacity: 0.3, duration: 0.4 }, T.s7Groc);
+  tl.to('#s7-p3', { opacity: 1, duration: 0.4 }, T.s7Groc);
+  fadeOut('#s7-h1', T.s7Groc - 0.1, 0.3);
+  tl.fromTo('#s7-h2', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: E }, T.s7Groc + 0.1);
+
+  // ---- 8 · what's changing ----
+  rise('#s8-in .insight-head', S[7] + 0.15, 20);
+  rise('#s8-in .chart-card', S[7] + 0.3, 30);
+  tl.fromTo('#s8-lt', { strokeDashoffset: T.s8Len.total }, { strokeDashoffset: 0, duration: 1.8, ease: 'power1.inOut' }, T.s8Total + 0.3);
+  fade('#s8-dt', T.s8Total + 1.6, 0.4); fade('#s8-k0', T.s8Total + 0.3, 0.4);
+  rise('#s8-c0', T.s8Pct, 24);
+  tl.fromTo('#s8-le', { strokeDashoffset: T.s8Len.elec }, { strokeDashoffset: 0, duration: 1.4, ease: 'power1.inOut' }, T.s8Elec - 0.4);
+  fade('#s8-de', T.s8Elec + 0.9, 0.4); fade('#s8-k1', T.s8Elec - 0.4, 0.4);
+  tl.to(['#s8-lt', '#s8-dt'], { opacity: 0.4, duration: 0.5 }, T.s8Elec - 0.4);
+  rise('#s8-c1', T.s8Elec, 24);
+  fade('#s8-q', T.s8Q - 0.2, 0.5);
+  tl.fromTo('#s8-la', { strokeDashoffset: T.s8Len.app }, { strokeDashoffset: 0, duration: 1.4, ease: 'power1.inOut' }, T.s8App - 0.4);
+  fade('#s8-da', T.s8App + 0.9, 0.4); fade('#s8-k2', T.s8App - 0.4, 0.4);
+  rise('#s8-c2', T.s8App, 24);
+
+  // ---- 9 · every city, day and product ----
+  rise('#s9-in .insight-head', S[8] + 0.15, 20);
+  for (var q = 0; q < 3; q++) rise('#s9-c' + q, T.s9Cards[q], 60, 0.75);
+  tl.fromTo('#s9-c0 .mh i', { scaleX: 0, transformOrigin: '0 50%' }, { scaleX: 1, duration: 0.7, ease: 'power2.out', stagger: 0.06 }, T.s9Cards[0] + 0.3);
+  tl.fromTo('#s9-c1 .mv i', { scaleY: 0, transformOrigin: '50% 100%' }, { scaleY: 1, duration: 0.6, ease: 'power2.out', stagger: 0.05 }, T.s9Cards[1] + 0.3);
+  tl.fromTo('#s9-c2 .mini-sq i.on', { opacity: 0.15 }, { opacity: 1, duration: 0.25, stagger: 0.04 }, T.s9Cards[2] + 0.3);
+
+  // ---- 10 · act and share ----
+  rise('#s10-in .insight-head', S[9] + 0.1, 16);
+  rise('#s10-recs', T.s10Recs, 30, 0.8);
+  rise('#s10-exl', T.s10Exp - 0.25, 16, 0.5);
+  for (var e = 0; e < 4; e++) tl.fromTo('#s10-e' + e, { opacity: 0, y: 24, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.6)' }, T.s10Exp + e * 0.14);
+
+  // ---- 11 · outro ----
+  // beat-locked: outro logo lands on a strong cue (see T.s11Logo)
+  tl.fromTo('#s11-mark', { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.6)' }, T.s11LogoT);
+  tl.fromTo('#s11-word', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.8, ease: E }, T.s11LogoT + 0.15);
+  rise('#s11-tag', T.s11Tag, 20);
+  rise('#s11-url', T.s11Url, 20);
+
+  window.__timelines['main'] = tl;
+})();
+
+</script>
+</body>
+</html>

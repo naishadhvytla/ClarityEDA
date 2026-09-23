@@ -1,0 +1,2 @@
+Introducing Clarity: turn any spreadsheet into a report you can act on.
+I dropped in 107,836 retail transactions, and in seconds it found that Electronics is 3.7% of transactions but 49% of revenue, and that it alone explains an 18% slide. Try it free at clarityeda.netlify.app
