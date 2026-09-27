@@ -203,18 +203,32 @@ def run_test(args: argparse.Namespace, models1, models2, stage: str, dec: Dict, 
         candt = candidates(Qt, qkt, Pt, pkt, args.max_bucket, args.top_n)
         del qkt, pkt
         n_stage_a += len(candt)
-        tq, tc = candt["q"].to_numpy(np.int64), candt["c"].to_numpy(np.int64)
-        Xt = build_X(Qt, Pt, candt)
-        pt1 = predict(models1, Xt)
-        keep_t = top_n_per_group(tq, pt1, args.keep_n) & (pt1 >= args.keep_p)
-        tq, tc, pt1 = tq[keep_t], tc[keep_t], pt1[keep_t]
+        # Stage-1 scoring in S1 chunks (group context is per S1, so chunks are exact); only the
+        # filtered rows are kept for stage 2, which bounds memory on the largest country.
+        cq_all = candt["q"].to_numpy(np.int64)
+        kq, kc, kp, kx = [], [], [], []
+        for s in range(0, len(Qt), 150_000):
+            sel = (cq_all >= s) & (cq_all < s + 150_000)
+            part = candt[sel].reset_index(drop=True)
+            Xp = build_X(Qt, Pt, part)
+            p1 = predict(models1, Xp)
+            qq = part["q"].to_numpy(np.int64)
+            kk = top_n_per_group(qq, p1, args.keep_n) & (p1 >= args.keep_p)
+            kq.append(qq[kk]); kc.append(part["c"].to_numpy(np.int64)[kk]); kp.append(p1[kk])
+            kx.append(Xp[kk].reset_index(drop=True))
+            del Xp, part
+            gc.collect()
+        tq, tc, pt1 = np.concatenate(kq), np.concatenate(kc), np.concatenate(kp)
+        Xk = pd.concat(kx, ignore_index=True)
+        del kx
         pt = pt1
         if stage == "stage2":
-            pt = predict(models2, pd.concat([Xt[keep_t].reset_index(drop=True), prob_context(pt1, tq, tc)], axis=1))
+            pt = predict(models2, pd.concat([Xk, prob_context(pt1, tq, tc)], axis=1))
+        del Xk
         out_q.append(Qt["entity_id"].to_numpy(object)[tq])
         out_c.append(Pt["entity_id"].to_numpy(object)[tc])
         out_p.append(pt)
-        del Xt, Qt, Pt, candt
+        del Qt, Pt, candt
         gc.collect()
     tq_ids = s1_all["entity_id"].to_numpy(object)
     tp_ids = pool_all["entity_id"].to_numpy(object)

@@ -20,7 +20,6 @@ def main() -> None:
     ch, ob, te = rep["chosen"], rep["oof_breakdown"], rep["test"]
     s1 = rep.get("stage1", {})
     s2 = rep.get("stage2", {})
-    s1f = rep.get("stage1_on_final", {})
     feats = rep.get(ch["stage"] if ch["stage"] in rep else "stage2", {}).get("top_features", {})
     top = ", ".join(f"`{k}` ({v:.3f})" for k, v in list(feats.items())[:10])
     d = ch["decoding"]
@@ -168,7 +167,7 @@ ntrue including matches that blocking missed. The rules are:
 - **F0.5 Score (macro, out-of-fold, 220,682 S1 entities):** **{ch['oof_f05']:.4f}**.
   By country: US {ob.get('country=US', float('nan')):.4f}, India {ob.get('country=India', float('nan')):.4f}.
   Singletons {ob['singletons']:.4f}, non-singletons {ob['non_singletons']:.4f}.
-- **Stages:** stage 1 on the final candidates scores {s1f.get('oof_f05', float('nan')):.4f}, and stage 2 scores {s2.get('oof_f05', float('nan')):.4f}.
+- **Stages:** stage 1 alone (on the stage-A candidates) scores {s1.get('oof_f05', float('nan')):.4f}, and stage 2 on the final candidate set scores {s2.get('oof_f05', float('nan')):.4f}.
 - **Test sanity check:** the share of S1 entities with a non-empty prediction by country is {te['pred_nonempty_by_country']}, and the
   mean number of matches per S1 is {te['matches_per_s1_by_country']}. The train non-singleton rate is {pct(1 - ts['singleton_frac'])} and train has 3.46 matches per S1.
   France behaves like the training countries even though no French record was seen in training.
