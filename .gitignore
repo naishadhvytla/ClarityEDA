@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 student_resource/
 *.zip
+*.zip.part_*
