@@ -32,7 +32,7 @@ import lightgbm as lgb
 from sklearn.model_selection import GroupKFold
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from blocking import cheap_score, key_join, make_keys, top_n_per_group  # noqa: E402
+from blocking import cheap_score, key_join, make_keys, prepare_pool_keys, top_n_per_group  # noqa: E402
 from features import add_group_context, pair_features  # noqa: E402
 from io_utils import load_ground_truth, load_split, validate_outputs, write_lists  # noqa: E402
 from metrics import breakdown, decode_mask, score_mask, search_decoding  # noqa: E402
@@ -60,6 +60,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--trees", type=int, default=400)
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--workers", type=int, default=os.cpu_count() or 4)
+    ap.add_argument("--skip-train", action="store_true", help="reuse <work>/models.pkl and only run test inference")
     ap.add_argument("--keep-n", type=int, default=10, help="final candidates kept per S1 by stage-1 probability")
     ap.add_argument("--keep-p", type=float, default=0.01, help="min stage-1 probability of a final candidate")
     return ap.parse_args()
@@ -115,15 +116,21 @@ def mini_world(tr: Dict[str, pd.DataFrame], gt: Dict[str, List[str]], frac: floa
 
 
 def candidates(Q: pd.DataFrame, qkeys: pd.DataFrame, P: pd.DataFrame, pkeys: pd.DataFrame,
-               max_bucket: int, top_n: int) -> pd.DataFrame:
-    """Hash-join blocking + cheap-score top-N cut. Returns [q, c, n_keys, cheap]."""
-    pairs = key_join(qkeys, pkeys, max_bucket)
-    log(f"  raw key-join pairs: {len(pairs):,} ({len(pairs) / len(Q):.1f}/S1)")
-    q, c = pairs["q"].to_numpy(np.int64), pairs["c"].to_numpy(np.int64)
-    pairs["cheap"] = cheap_score(Q, P, q, c)
-    keep = top_n_per_group(q, pairs["cheap"].to_numpy(), top_n)
-    out = pairs[keep].reset_index(drop=True)
-    log(f"  after top-{top_n} cut: {len(out):,} ({len(out) / len(Q):.2f}/S1)")
+               max_bucket: int, top_n: int, chunk: int = 100_000) -> pd.DataFrame:
+    """Hash-join blocking + cheap-score top-N cut, processed in chunks of ``chunk`` S1 rows so
+    the join never materialises more than one chunk's raw pairs. Returns [q, c, n_keys, cheap]."""
+    pk = prepare_pool_keys(pkeys, max_bucket)
+    outs, n_raw = [], 0
+    for s in range(0, len(Q), chunk):
+        qk = qkeys[(qkeys["row"].values >= s) & (qkeys["row"].values < s + chunk)]
+        pairs = key_join(qk, pk)
+        n_raw += len(pairs)
+        q, c = pairs["q"].to_numpy(np.int64), pairs["c"].to_numpy(np.int64)
+        pairs["cheap"] = cheap_score(Q, P, q, c)
+        outs.append(pairs[top_n_per_group(q, pairs["cheap"].to_numpy(), top_n)])
+    out = pd.concat(outs, ignore_index=True)
+    log(f"  raw key-join pairs: {n_raw:,} ({n_raw / len(Q):.1f}/S1); after top-{top_n} cut: "
+        f"{len(out):,} ({len(out) / len(Q):.2f}/S1)")
     return out
 
 
@@ -174,6 +181,82 @@ def prob_context(p: np.ndarray, q: np.ndarray, c: np.ndarray) -> pd.DataFrame:
     return df
 
 
+def run_test(args: argparse.Namespace, models1, models2, stage: str, dec: Dict, report: Dict) -> None:
+    """Score the full test set country by country, decode, write and validate both outputs."""
+    # ---------------- test ----------------
+    # Processed one country label at a time: every blocking key is country-prefixed, so no
+    # cross-country pair can be generated and the result is identical, with a much lower memory peak.
+    log("loading test")
+    te = load_split(args.data, "test")
+    s1_all = te["s1"]
+    pool_all = pd.concat([te["s2"], te["s3"]], ignore_index=True)
+    del te
+    out_q, out_c, out_p, n_stage_a = [], [], [], 0
+    for lab in pd.unique(s1_all["country"]):
+        s1c = s1_all[s1_all["country"] == lab]
+        poolc = pool_all[pool_all["country"] == lab]
+        log(f"test country={lab}: {len(s1c):,} S1, {len(poolc):,} pool")
+        if len(poolc) == 0:
+            continue
+        Qt, qkt = normalize_parallel(s1c, args.workers)
+        Pt, pkt = normalize_parallel(poolc, args.workers)
+        candt = candidates(Qt, qkt, Pt, pkt, args.max_bucket, args.top_n)
+        del qkt, pkt
+        n_stage_a += len(candt)
+        tq, tc = candt["q"].to_numpy(np.int64), candt["c"].to_numpy(np.int64)
+        Xt = build_X(Qt, Pt, candt)
+        pt1 = predict(models1, Xt)
+        keep_t = top_n_per_group(tq, pt1, args.keep_n) & (pt1 >= args.keep_p)
+        tq, tc, pt1 = tq[keep_t], tc[keep_t], pt1[keep_t]
+        pt = pt1
+        if stage == "stage2":
+            pt = predict(models2, pd.concat([Xt[keep_t].reset_index(drop=True), prob_context(pt1, tq, tc)], axis=1))
+        out_q.append(Qt["entity_id"].to_numpy(object)[tq])
+        out_c.append(Pt["entity_id"].to_numpy(object)[tc])
+        out_p.append(pt)
+        del Xt, Qt, Pt, candt
+        gc.collect()
+    tq_ids = s1_all["entity_id"].to_numpy(object)
+    tp_ids = pool_all["entity_id"].to_numpy(object)
+    cq = np.concatenate(out_q) if out_q else np.zeros(0, object)
+    cc = np.concatenate(out_c) if out_c else np.zeros(0, object)
+    pt = np.concatenate(out_p) if out_p else np.zeros(0)
+    tq, tc = pd.Index(tq_ids).get_indexer(cq), pd.Index(tp_ids).get_indexer(cc)
+    cty = s1_all["country"].to_numpy(object)
+    n_pool_total = len(pool_all)
+    del s1_all, pool_all
+    mt = decode_mask(tq, tc, pt, len(tq_ids), dec["exclusive"], dec["t"], dec["r"], dec["g"])
+    order = np.lexsort((-pt, tq))
+    cand_lists: Dict[str, List[str]] = {}
+    match_lists: Dict[str, List[str]] = {}
+    for i in order:
+        s = tq_ids[tq[i]]
+        cand_lists.setdefault(s, []).append(tp_ids[tc[i]])
+        if mt[i]:
+            match_lists.setdefault(s, []).append(tp_ids[tc[i]])
+    s1_list = list(tq_ids)
+    mpath, cpath = os.path.join(args.out, "matching_results.tsv"), os.path.join(args.out, "candidate_pairs.tsv")
+    write_lists(mpath, s1_list, match_lists, "matched_entity_ids")
+    write_lists(cpath, s1_list, cand_lists, "candidate_entity_ids")
+    problems = validate_outputs(mpath, cpath, s1_list, set(tp_ids))
+    report["internal_validation"] = problems[:20] or "PASS"
+    log(f"internal validation: {report['internal_validation']}")
+    report["test"] = {
+        "stageA_cands_per_s1": float(n_stage_a / len(tq_ids)),
+        "cands_per_s1": float(len(tq) / len(tq_ids)),
+        "reduction_ratio": float(1 - len(tq) / (len(tq_ids) * n_pool_total)),
+        "pred_nonempty_by_country": pd.Series([bool(match_lists.get(s)) for s in s1_list]).groupby(cty).mean().round(4).to_dict(),
+        "matches_per_s1_by_country": pd.Series([len(match_lists.get(s, [])) for s in s1_list]).groupby(cty).mean().round(3).to_dict(),
+        "cands_per_s1_by_country": pd.Series([len(cand_lists.get(s, [])) for s in s1_list]).groupby(cty).mean().round(3).to_dict(),
+    }
+    log(f"test: {report['test']}")
+    np.savez_compressed(os.path.join(args.work, "test_pairs.npz"), tq=tq, tc=tc, test=pt)
+    report["runtime_sec"] = round(time.time() - T0, 1)
+    with open(os.path.join(args.work, "report.json"), "w") as fh:
+        json.dump(report, fh, indent=2, default=str)
+    log("done")
+
+
 def main() -> None:
     """Run the full pipeline and write outputs, report.json and pairs.npz."""
     args = parse_args()
@@ -182,6 +265,15 @@ def main() -> None:
     os.makedirs(args.out, exist_ok=True)
     os.makedirs(args.work, exist_ok=True)
     report: Dict = {"args": vars(args)}
+    if args.skip_train:
+        with open(os.path.join(args.work, "models.pkl"), "rb") as fh:
+            saved = pickle.load(fh)
+        rpath = os.path.join(args.work, "report.json")
+        if os.path.exists(rpath):
+            with open(rpath) as fh:
+                report = json.load(fh)
+        run_test(args, saved["models1"], saved["models2"], saved["stage"], saved["decoding"], report)
+        return
 
     log("loading train")
     tr = load_split(args.data, "train")
@@ -251,83 +343,14 @@ def main() -> None:
         os.path.join(args.work, "oof_errors.tsv"), sep="\t", index=False)
     del X, X2, Q, P
 
+    np.savez_compressed(os.path.join(args.work, "pairs.npz"), q=q, c=c, y=y, oof=final_oof, ntrue=ntrue)
+    with open(os.path.join(args.work, "report.json"), "w") as fh:
+        json.dump(report, fh, indent=2, default=str)
     with open(os.path.join(args.work, "models.pkl"), "wb") as fh:
         pickle.dump({"models1": models1, "models2": models2, "stage": stage, "decoding": dec}, fh)
     gc.collect()
 
-    # ---------------- test ----------------
-    # Processed one country label at a time: every blocking key is country-prefixed, so no
-    # cross-country pair can be generated and the result is identical, with a much lower memory peak.
-    log("loading test")
-    te = load_split(args.data, "test")
-    s1_all = te["s1"]
-    pool_all = pd.concat([te["s2"], te["s3"]], ignore_index=True)
-    del te
-    out_q, out_c, out_p, n_stage_a = [], [], [], 0
-    for lab in pd.unique(s1_all["country"]):
-        s1c = s1_all[s1_all["country"] == lab]
-        poolc = pool_all[pool_all["country"] == lab]
-        log(f"test country={lab}: {len(s1c):,} S1, {len(poolc):,} pool")
-        if len(poolc) == 0:
-            continue
-        Qt, qkt = normalize_parallel(s1c, args.workers)
-        Pt, pkt = normalize_parallel(poolc, args.workers)
-        candt = candidates(Qt, qkt, Pt, pkt, args.max_bucket, args.top_n)
-        del qkt, pkt
-        n_stage_a += len(candt)
-        tq, tc = candt["q"].to_numpy(np.int64), candt["c"].to_numpy(np.int64)
-        Xt = build_X(Qt, Pt, candt)
-        pt1 = predict(models1, Xt)
-        keep_t = top_n_per_group(tq, pt1, args.keep_n) & (pt1 >= args.keep_p)
-        tq, tc, pt1 = tq[keep_t], tc[keep_t], pt1[keep_t]
-        pt = pt1
-        if stage == "stage2":
-            pt = predict(models2, pd.concat([Xt[keep_t].reset_index(drop=True), prob_context(pt1, tq, tc)], axis=1))
-        out_q.append(Qt["entity_id"].to_numpy(object)[tq])
-        out_c.append(Pt["entity_id"].to_numpy(object)[tc])
-        out_p.append(pt)
-        del Xt, Qt, Pt, candt
-        gc.collect()
-    tq_ids = s1_all["entity_id"].to_numpy(object)
-    tp_ids = pool_all["entity_id"].to_numpy(object)
-    cq = np.concatenate(out_q) if out_q else np.zeros(0, object)
-    cc = np.concatenate(out_c) if out_c else np.zeros(0, object)
-    pt = np.concatenate(out_p) if out_p else np.zeros(0)
-    tq, tc = pd.Index(tq_ids).get_indexer(cq), pd.Index(tp_ids).get_indexer(cc)
-    cty = s1_all["country"].to_numpy(object)
-    n_pool_total = len(pool_all)
-    del s1_all, pool_all
-    mt = decode_mask(tq, tc, pt, len(tq_ids), dec["exclusive"], dec["t"], dec["r"], dec["g"])
-    order = np.lexsort((-pt, tq))
-    cand_lists: Dict[str, List[str]] = {}
-    match_lists: Dict[str, List[str]] = {}
-    for i in order:
-        s = tq_ids[tq[i]]
-        cand_lists.setdefault(s, []).append(tp_ids[tc[i]])
-        if mt[i]:
-            match_lists.setdefault(s, []).append(tp_ids[tc[i]])
-    s1_list = list(tq_ids)
-    mpath, cpath = os.path.join(args.out, "matching_results.tsv"), os.path.join(args.out, "candidate_pairs.tsv")
-    write_lists(mpath, s1_list, match_lists, "matched_entity_ids")
-    write_lists(cpath, s1_list, cand_lists, "candidate_entity_ids")
-    problems = validate_outputs(mpath, cpath, s1_list, set(tp_ids))
-    report["internal_validation"] = problems[:20] or "PASS"
-    log(f"internal validation: {report['internal_validation']}")
-    report["test"] = {
-        "stageA_cands_per_s1": float(n_stage_a / len(tq_ids)),
-        "cands_per_s1": float(len(tq) / len(tq_ids)),
-        "reduction_ratio": float(1 - len(tq) / (len(tq_ids) * n_pool_total)),
-        "pred_nonempty_by_country": pd.Series([bool(match_lists.get(s)) for s in s1_list]).groupby(cty).mean().round(4).to_dict(),
-        "matches_per_s1_by_country": pd.Series([len(match_lists.get(s, [])) for s in s1_list]).groupby(cty).mean().round(3).to_dict(),
-        "cands_per_s1_by_country": pd.Series([len(cand_lists.get(s, [])) for s in s1_list]).groupby(cty).mean().round(3).to_dict(),
-    }
-    log(f"test: {report['test']}")
-    np.savez_compressed(os.path.join(args.work, "pairs.npz"), q=q, c=c, y=y, oof=final_oof, ntrue=ntrue,
-                        tq=tq, tc=tc, test=pt)
-    report["runtime_sec"] = round(time.time() - T0, 1)
-    with open(os.path.join(args.work, "report.json"), "w") as fh:
-        json.dump(report, fh, indent=2, default=str)
-    log("done")
+    run_test(args, models1, models2, stage, dec, report)
 
 
 if __name__ == "__main__":

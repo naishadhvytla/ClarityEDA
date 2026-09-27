@@ -70,12 +70,16 @@ def make_keys(df: pd.DataFrame) -> pd.DataFrame:
     return pd.concat(parts, ignore_index=True)
 
 
-def key_join(qkeys: pd.DataFrame, pkeys: pd.DataFrame, max_bucket: int) -> pd.DataFrame:
-    """Join S1 keys with pool keys; skip buckets with more than ``max_bucket`` pool records.
-    Returns unique (q, c) pairs with ``n_keys`` = number of shared keys."""
+def prepare_pool_keys(pkeys: pd.DataFrame, max_bucket: int) -> pd.DataFrame:
+    """De-duplicate pool keys and drop buckets holding more than ``max_bucket`` pool records."""
     pk = pkeys.drop_duplicates()
     size = pk["key"].map(pk["key"].value_counts())
-    pk = pk[size.values <= max_bucket]
+    return pk[size.values <= max_bucket]
+
+
+def key_join(qkeys: pd.DataFrame, pk: pd.DataFrame) -> pd.DataFrame:
+    """Join S1 keys with prepared pool keys. Returns unique (q, c) pairs with ``n_keys`` =
+    number of shared keys."""
     j = qkeys.drop_duplicates().merge(pk, on="key", suffixes=("_q", "_c"))
     g = j.groupby(["row_q", "row_c"], sort=False).size().reset_index(name="n_keys")
     return g.rename(columns={"row_q": "q", "row_c": "c"})
