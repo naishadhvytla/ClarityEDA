@@ -65,9 +65,9 @@ def search_decoding(q: np.ndarray, c: np.ndarray, p: np.ndarray, y: np.ndarray,
     qmax = np.zeros(n_q)
     np.maximum.at(qmax, q, p)
     best, best_s = None, -1.0
-    ts = np.round(np.arange(0.05, 0.96, 0.025), 3)
-    rs = [0.0, 0.3, 0.5, 0.6, 0.7, 0.8, 0.9]
-    gs = [0.0, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+    ts = np.round(np.arange(0.1, 0.96, 0.05), 3)
+    rs = [0.0, 0.5, 0.7, 0.85]
+    gs = [0.0, 0.5, 0.7, 0.9]
     for ex, t, r, g in itertools.product((False, True), ts, rs, gs):
         if 0 < g <= t:
             continue  # gate below the threshold has no effect
